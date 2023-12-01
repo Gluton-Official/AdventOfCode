@@ -1,32 +1,21 @@
 fun main() {
-    fun part1(input: List<String>): Int =
-        input.map { it.first { it.isDigit() }.toString() + it.last { it.isDigit() }.toString() }.sumOf { it.toInt() }
+    fun part1(input: List<String>): Int = input.map {
+        it.first(Char::isDigit).toString() + it.last(Char::isDigit).toString()
+    }.sumOf(String::toInt)
 
     fun part2(input: List<String>): Int {
-        val digits = listOf(
-            "one",
-            "two",
-            "three",
-            "four",
-            "five",
-            "six",
-            "seven",
-            "eight",
-            "nine"
-        )
-        val allDigits = digits + (1..9).toList().map { it.toString() }
-        val digitMap = digits.zip((1..9).toList().map { it.toString() }).toMap()
+        val digits = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+            .withIndex().associate { (i, v) -> v to (i + 1).toString() }
+        val values = digits.keys + digits.values
 
         return input.sumOf {
-            (it.findAnyOf(allDigits)!!.let { (_, s) ->
-                digitMap.getOrDefault(s, s)
-            } + it.findLastAnyOf(allDigits)!!.let { (_, s) ->
-                digitMap.getOrDefault(s, s)
-            }).toInt()
+            listOf(it.findAnyOf(values), it.findLastAnyOf(values))
+                .map { it!!.second }
+                .joinToString("") { digits[it] ?: it }
+                .toInt()
         }
     }
 
-    // test if implementation meets criteria from the description, like:
     var testInput = """
         1abc2
         pqr3stu8vwx
