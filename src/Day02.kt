@@ -1,4 +1,3 @@
-
 object Day02 : AoCPuzzle(2) {
     override val part1Test: Test
         get() = Test(8, """
@@ -10,19 +9,19 @@ object Day02 : AoCPuzzle(2) {
         """.trimIndent())
 
     override fun part1(input: List<String>): Int {
-        val limit = Game.Set(
+        val limit = Set(
             red = 12,
             green = 13,
             blue = 14,
         )
 
-        return input.map(Game::read).filter {  game ->
+        return input.map(Game::from).filter { game ->
             game.sets.all {
                 it.red <= limit.red &&
-                    it.blue <= limit.blue &&
-                    it.green <= limit.green
+                it.blue <= limit.blue &&
+                it.green <= limit.green
             }
-        }.sumOf { it.id }
+        }.sumOf(Game::id)
     }
 
     override val part2Test: Test
@@ -35,40 +34,37 @@ object Day02 : AoCPuzzle(2) {
         """.trimIndent())
 
     override fun part2(input: List<String>): Int =
-        input.map(Game::read).sumOf {
-            var minRed = 0
-            var minGreen = 0
-            var minBlue = 0
-            it.sets.forEach {
-                minRed = minRed.coerceAtLeast(it.red)
-                minGreen = minGreen.coerceAtLeast(it.green)
-                minBlue = minBlue.coerceAtLeast(it.blue)
-            }
-            minRed * minGreen * minBlue
+        input.map(Game::from).sumOf { game ->
+            game.sets.fold(Set()) { minSet, set -> minSet.apply {
+                red = red.coerceAtLeast(set.red)
+                blue = blue.coerceAtLeast(set.blue)
+                green = green.coerceAtLeast(set.green)
+            }}.run { red * green * blue }
         }
 
     data class Game(val id: Int, val sets: List<Set>) {
-        data class Set(val red: Int, val green: Int, val blue: Int)
-
         companion object {
-            fun read(game: String): Game {
-                val (id, sets) = game.split(':')
-                return Game(id.split(' ').last().toInt(), sets.split(';').map { set ->
-                    val setMap = set.split(',').map(String::trim).map { cubes ->
-                        val (num, color) = cubes.split(' ')
-                        color to num.toInt()
-                    }.toMap()
+            fun from(string: String): Game {
+                val (id, sets) = string.split(':').let { (idString, setsString) ->
+                    idString.split(' ').last().toInt() to setsString.split(';')
+                }
+                return Game(id, sets.map { set ->
+                    val setMap = set.split(',').map(String::trim).associate {
+                        it.split(' ').let { (num, color) -> color to num.toInt() }
+                    }
                     Set(setMap["red"] ?: 0, setMap["green"] ?: 0, setMap["blue"] ?: 0)
                 })
             }
         }
     }
+
+    data class Set(var red: Int = 0, var green: Int = 0, var blue: Int = 0)
 }
 
-fun main() {
-    Day02.testPart1()
-    Day02.testPart2()
+fun main(): Unit = with(Day02) {
+    testPart1()
+    testPart2()
 
-    Day02.runPart1().println()
-    Day02.runPart2().println()
+    runPart1().println()
+    runPart2().println()
 }
