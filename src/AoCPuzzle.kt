@@ -1,8 +1,9 @@
 import java.io.File
 import kotlin.test.assertEquals
 
-abstract class AoCPuzzle(val day: Int) {
-    private val name = "Day%02d".format(day)
+abstract class AoCPuzzle {
+    private val name = this::class.simpleName!!
+    private val day = name.substringAfter("Day").toInt()
     private val input: List<String> by lazy {
         ensureInputFile()
         readInput(name)

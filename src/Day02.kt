@@ -1,4 +1,4 @@
-object Day02 : AoCPuzzle(2) {
+object Day02 : AoCPuzzle() {
     override val part1Test: Test
         get() = Test(8, """
             Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
@@ -59,12 +59,13 @@ object Day02 : AoCPuzzle(2) {
     }
 
     data class Set(var red: Int = 0, var green: Int = 0, var blue: Int = 0)
-}
+    
+    @JvmStatic
+    fun main(args: Array<String>) {
+        testPart1()
+        testPart2()
 
-fun main(): Unit = with(Day02) {
-    testPart1()
-    testPart2()
-
-    runPart1().println()
-    runPart2().println()
+        runPart1().println()
+        runPart2().println()
+    }
 }

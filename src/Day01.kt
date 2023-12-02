@@ -1,5 +1,5 @@
 
-object Day01 : AoCPuzzle(1) {
+object Day01 : AoCPuzzle() {
     override val part1Test: Test
         get() = Test(142, """
             1abc2
@@ -35,12 +35,13 @@ object Day01 : AoCPuzzle(1) {
                 .toInt()
         }
     }
-}
 
-fun main() {
-    Day01.testPart1()
-    Day01.testPart2()
+    @JvmStatic
+    fun main(args: Array<String>) {
+        testPart1()
+        testPart2()
 
-    Day01.runPart1().println()
-    Day01.runPart2().println()
+        runPart1().println()
+        runPart2().println()
+    }
 }
