@@ -6,6 +6,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-script-runtime")
     implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    val ktorVersion = "2.3.6"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation(kotlin("test"))
 }
 

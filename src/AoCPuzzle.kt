@@ -29,7 +29,7 @@ abstract class AoCPuzzle {
 
     private fun ensureInputFile() {
         if (!File("resources/$name.txt").exists()) {
-            fetchInput(day = day)
+            downloadInput(day = day)
         }
     }
 

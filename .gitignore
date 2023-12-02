@@ -2,3 +2,4 @@
 .idea
 build
 resources/Day*.txt
+.env
