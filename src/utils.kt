@@ -41,3 +41,18 @@ fun downloadInput(
 
     File("resources/Day${"%02d".format(day)}.txt").writeText(text)
 }
+
+fun String.consume(action: (String, Char) -> String) {
+    var remains = this
+    while (remains.isNotEmpty()) {
+        remains = action(remains, remains.first())
+    }
+}
+
+fun String.consumeIndexed(action: (Int, String, Char) -> String) {
+    val initialLength = length
+    var remains = this
+    while (remains.isNotEmpty()) {
+        remains = action(initialLength - remains.length, remains, remains.first())
+    }
+}

@@ -5,33 +5,21 @@ abstract class AoCPuzzle {
     private val name = this::class.simpleName!!
     private val day = name.substringAfter("Day").toInt()
     private val input: List<String> by lazy {
-        ensureInputFile()
+        if (!File("resources/$name.txt").exists()) downloadInput(day)
         readInput(name)
     }
 
     protected open val part1Test = Test()
     protected open val part2Test = Test()
 
-    open fun part1(input: List<String>): Int = 0
-    open fun part2(input: List<String>): Int = 0
+    protected open fun part1(input: List<String>): Int = 0
+    protected open fun part2(input: List<String>): Int = 0
 
-    fun testPart1() = assertEquals(part1Test.expected, part1(part1Test.input.lines()))
-    fun testPart2() = assertEquals(part2Test.expected, part2(part2Test.input.lines()))
+    protected fun testPart1() = assertEquals(part1Test.expected, part1(part1Test.input.lines()))
+    protected fun testPart2() = assertEquals(part2Test.expected, part2(part2Test.input.lines()))
 
-    fun runPart1(): Int {
-        ensureInputFile()
-        return part1(input)
-    }
-    fun runPart2(): Int {
-        ensureInputFile()
-        return part2(input)
-    }
-
-    private fun ensureInputFile() {
-        if (!File("resources/$name.txt").exists()) {
-            downloadInput(day = day)
-        }
-    }
+    protected fun runPart1() = part1(input)
+    protected fun runPart2() = part2(input)
 
     protected data class Test(val expected: Int = 0, val input: String = "")
 }

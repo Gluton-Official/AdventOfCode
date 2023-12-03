@@ -1,3 +1,4 @@
+
 object Day02 : AoCPuzzle() {
     override val part1Test: Test
         get() = Test(8, """
