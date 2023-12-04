@@ -9,21 +9,20 @@ object Day02 : AoCPuzzle() {
             Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
         """.trimIndent())
 
-    override fun part1(input: List<String>): Int {
-        val limit = Set(
-            red = 12,
-            green = 13,
-            blue = 14,
-        )
-
-        return input.map(Game::from).filter { game ->
+    override fun part1(input: List<String>): Int =
+        input.map(Game::from).filter { game ->
             game.sets.all {
-                it.red <= limit.red &&
-                it.blue <= limit.blue &&
-                it.green <= limit.green
+                it.red <= setLimit.red &&
+                it.blue <= setLimit.blue &&
+                it.green <= setLimit.green
             }
         }.sumOf(Game::id)
-    }
+
+    private val setLimit = Set(
+        red = 12,
+        green = 13,
+        blue = 14,
+    )
 
     override val part2Test: Test
         get() = Test(2286, """

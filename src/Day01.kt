@@ -23,18 +23,16 @@ object Day01 : AoCPuzzle() {
             7pqrstsixteen
         """.trimIndent())
 
-    override fun part2(input: List<String>): Int {
-        val digits = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
-            .zip((1..9).map(Int::toString)).toMap()
-        val values = digits.keys + digits.values
-
-        return input.sumOf {
-            listOf(it.findAnyOf(values), it.findLastAnyOf(values))
-                .map { it!!.second }
-                .joinToString("") { digits[it] ?: it }
-                .toInt()
-        }
+    override fun part2(input: List<String>): Int = input.sumOf {
+        listOf(it.findAnyOf(digitStrings), it.findLastAnyOf(digitStrings))
+            .map { it!!.second }
+            .joinToString("") { wordToDigit[it] ?: it }
+            .toInt()
     }
+
+    private val wordToDigit = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+        .zip((1..9).map(Int::toString)).toMap()
+    private val digitStrings = wordToDigit.keys + wordToDigit.values
 
     @JvmStatic
     fun main(args: Array<String>) {
