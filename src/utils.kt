@@ -16,7 +16,7 @@ import kotlin.io.path.readLines
 
 val dotenv = dotenv()
 
-fun Any?.println() = also { println(it) }
+fun <T> T.println() = also { println(it) }
 
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16).padStart(32, '0')
 
