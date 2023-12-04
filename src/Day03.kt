@@ -105,7 +105,7 @@ object Day03 : AoCPuzzle() {
         testPart1()
         testPart2()
 
-        runPart1().println()
-        runPart2().println()
+        runPart1()
+        runPart2()
     }
 }
