@@ -26,18 +26,18 @@ object Day04 : AoCPuzzle() {
             Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
         """.trimIndent())
 
-    override fun part2(input: List<String>): Int {
-        data class CardBucket(val card: Card, var count: Int = 1)
-        val cards = input.map(Card::invoke).associate { it.id to CardBucket(it) }.toSortedMap()
-        for ((cardId, cardBucket) in cards.entries) {
-            for (nextCardId in (cardId + 1)..(cardId + cardBucket.card.wins)) {
-                cards[nextCardId]?.let { it.count += cardBucket.count } ?: break
+    override fun part2(input: List<String>): Int = input.map(Card::invoke)
+        .associate { it.id to CardBucket(it) }.let { cards ->
+            cards.entries.sumOf { (cardId, cardBucket) ->
+                for (nextCardId in cardId.asRange(1, cardBucket.card.wins)) {
+                    cards[nextCardId]?.let { it.count += cardBucket.count } ?: break
+                }
+                cardBucket.count
             }
         }
-        return cards.values.sumOf { (_, count) -> count }
-    }
 
-    data class Card(val id: Int, val winningNumbers: List<Int>, val yourNumbers: List<Int>) {
+    private data class CardBucket(val card: Card, var count: Int = 1)
+    private data class Card(val id: Int, val winningNumbers: List<Int>, val yourNumbers: List<Int>) {
         val wins: Int by lazy {
             winningNumbers.intersect(yourNumbers.toSet()).count()
         }
