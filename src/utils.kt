@@ -43,8 +43,16 @@ fun downloadInput(
 }
 
 infix fun IntRange.offset(offset: Int) = (start + offset)..(endInclusive + offset)
+infix fun LongRange.offset(offset: Long) = (start + offset)..(endInclusive + offset)
 
 fun String.consume(action: (String, Char) -> String) {
+    var remains = this
+    while (remains.isNotEmpty()) {
+        remains = action(remains, remains.first())
+    }
+}
+
+fun <E> Collection<E>.consume(action: (Collection<E>, E) -> Collection<E>) {
     var remains = this
     while (remains.isNotEmpty()) {
         remains = action(remains, remains.first())
