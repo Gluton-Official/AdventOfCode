@@ -29,7 +29,7 @@ object Day04 : AoCPuzzle() {
     override fun part2(input: List<String>): Int = input.map(Card::invoke)
         .associate { it.id to CardBucket(it) }.let { cards ->
             cards.entries.sumOf { (cardId, cardBucket) ->
-                for (nextCardId in cardId.asRange(1, cardBucket.card.wins)) {
+                for (nextCardId in 1..cardBucket.card.wins offset cardId) {
                     cards[nextCardId]?.let { it.count += cardBucket.count } ?: break
                 }
                 cardBucket.count

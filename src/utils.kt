@@ -42,7 +42,7 @@ fun downloadInput(
     File("resources/Day${"%02d".format(day)}.txt").writeText(text)
 }
 
-fun Int.asRange(startOffset: Int = 0, endOffset: Int = 0) = (this + startOffset)..(this + endOffset)
+infix fun IntRange.offset(offset: Int) = (start + offset)..(endInclusive + offset)
 
 fun String.consume(action: (String, Char) -> String) {
     var remains = this
