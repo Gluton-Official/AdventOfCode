@@ -1,10 +1,3 @@
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
-import kotlin.time.measureTimedValue
 
 object Day05 : AoCPuzzle() {
     override val part1Test: Test
@@ -44,16 +37,11 @@ object Day05 : AoCPuzzle() {
             56 93 4
         """.trimIndent())
 
-    override fun part1(input: List<String>): Long =
-        input.run { first().split(' ').drop(1).map(String::toLong) to Almanac(drop(1)) }.let { (seeds, almanac) ->
-            var conversion = almanac["seed"]!!
-            var values = seeds
-            while (true) {
-                values = values.map(conversion::invoke)
-                conversion = conversion.destination.takeUnless { it == "location" }?.let(almanac::get) ?: break
-            }
-            values.min()
-        }
+    override fun part1(input: List<String>): Long = input.let { lines ->
+        lines.first().split(' ').drop(1).map(String::toLong) to Almanac(lines.drop(1))
+    }.let { (seeds, almanac) ->
+        seeds.minOf { seed -> almanac.locationOf(seed) }
+    }
 
     override val part2Test: Test
         get() = Test(46L, """
@@ -92,43 +80,18 @@ object Day05 : AoCPuzzle() {
             56 93 4
         """.trimIndent())
 
-    override fun part2(input: List<String>): Long = input.run {
-        val seedRanges = first().split(' ').drop(1)
+    override fun part2(input: List<String>): Long = input.let { lines ->
+        val seedRanges = lines.first().split(' ').drop(1)
             .map(String::toLong)
-            .chunked(2)
-            .map { SeedRange(it.first(), it.last()) }
-        val almanac = Almanac(drop(1))
+            .chunked(2) { (first, second) -> SeedRange(first, second) }
+        val almanac = Almanac(lines.drop(1))
 
-        val threadCount = Runtime.getRuntime().availableProcessors()
-        seedRanges.minOf { seedRange ->
-            val splitRanges = Unit.run {
-                val size = seedRange.length / threadCount
-                val remainder = seedRange.length % threadCount
-                var currentSeed = seedRange.start
-                (0..<threadCount).map {
-                    val endSeed = currentSeed + size + if (it < remainder) 1 else 0
-                    (currentSeed..<endSeed).also {
-                        currentSeed = endSeed
-                    }
-                }
-            }
-            measureTimedValue {
-                runBlocking {
-                    val deferredMins = mutableListOf<Deferred<Long>>()
-                    coroutineScope {
-                        splitRanges.forEach {
-                            deferredMins += async(Dispatchers.Default) {
-                                it.minOf { seed -> almanac.locationOf(seed) }
-                            }
-                        }
-                    }
-                    deferredMins.awaitAll().min()
-                }
-            }.let {
-                println("${it.value} in ${it.duration.inWholeMilliseconds}ms")
-                it.value
-            }
-        }
+        val threadCount = Runtime.getRuntime().availableProcessors().toLong()
+        seedRanges.minOf { seedRange -> timed {
+            seedRange.split(threadCount).mapParallel {
+                it.minOf { seed -> almanac.locationOf(seed) }
+            }.min()
+        }}
     }
 
     private class Almanac(maps: Map<String, Conversion>) : Map<String, Almanac.Conversion> by maps {

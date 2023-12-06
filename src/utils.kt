@@ -3,6 +3,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.cookie
 import io.ktor.client.request.get
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -13,6 +16,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
+import kotlin.time.measureTimedValue
 
 val dotenv = dotenv()
 
@@ -49,16 +53,31 @@ infix fun LongRange.constrainWith(predicate: (Long) -> Boolean) = first(predicat
 
 val LongRange.lengthInclusive: Long get() = endInclusive - start + 1
 val LongRange.lengthExclusive: Long get() = endInclusive - start
+
+fun <T : ClosedRange<Long>> T.chunked(chunkSize: Long): List<LongRange> = buildList {
+    val length = endInclusive - start
+    val chunks = length / chunkSize
+    val remainder = length % chunkSize
+    var current = start
+    for (i in 0..<chunks) {
+        val end = current + chunkSize + if (i < remainder) 1 else 0
+        add(current..<end)
+        current = end
+    }
+}
+
+fun <T : ClosedRange<Long>> T.split(count: Long): List<LongRange> = chunked((endInclusive - start) / count)
+
 fun String.consume(action: (String, Char) -> String) {
     var remains = this
-    while (remains.isNotEmpty()) {
+    while (remains.any()) {
         remains = action(remains, remains.first())
     }
 }
 
-fun <E> Collection<E>.consume(action: (Collection<E>, E) -> Collection<E>) {
+fun <T : Iterable<E>, E> T.consume(action: (T, E) -> T) {
     var remains = this
-    while (remains.isNotEmpty()) {
+    while (remains.any()) {
         remains = action(remains, remains.first())
     }
 }
@@ -66,7 +85,16 @@ fun <E> Collection<E>.consume(action: (Collection<E>, E) -> Collection<E>) {
 fun String.consumeIndexed(action: (Int, String, Char) -> String) {
     val initialLength = length
     var remains = this
-    while (remains.isNotEmpty()) {
+    while (remains.any()) {
         remains = action(initialLength - remains.length, remains, remains.first())
     }
+}
+
+// TODO: try to do automatic splitting
+fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
+    runBlocking { map { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
+
+fun <T> timed(block: () -> T): T = measureTimedValue(block).run {
+    println("${value.toString().padEnd(20)} $duration")
+    value
 }

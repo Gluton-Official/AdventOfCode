@@ -19,8 +19,8 @@ abstract class AoCPuzzle {
     protected fun testPart1() = assertEquals(part1Test.expected, part1(part1Test.input.lines()))
     protected fun testPart2() = assertEquals(part2Test.expected, part2(part2Test.input.lines()))
 
-    protected fun runPart1() = println("${measureTimeMillis { part1(input).println() }}ms")
-    protected fun runPart2() = println("${measureTimeMillis { part2(input).println() }}ms")
+    protected fun runPart1() = timed { part1(input) }
+    protected fun runPart2() = timed { part2(input) }
 
     protected data class Test(val expected: Number = 0, val input: String = "")
 }
