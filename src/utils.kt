@@ -82,6 +82,14 @@ fun <T : Iterable<E>, E> T.consume(action: (T, E) -> T) {
     }
 }
 
+fun <T : Iterable<E>, E, C> T.consumeTo(destination: C, action: C.(T, E) -> T): C {
+    var remains = this
+    while (remains.any()) {
+        remains = destination.action(remains, remains.first())
+    }
+    return destination
+}
+
 fun String.consumeIndexed(action: (Int, String, Char) -> String) {
     val initialLength = length
     var remains = this

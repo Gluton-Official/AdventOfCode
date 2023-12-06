@@ -122,27 +122,25 @@ object Day05 : AoCPuzzle() {
 
         companion object {
             operator fun invoke(lines: List<String>) = Almanac(
-                buildMap {
-                    lines.consume { lines, line ->
-                        when {
-                            line.isNotBlank() -> {
-                                val (source, destination) = line.split("-to-", " ").zipWithNext().first()
-                                val ranges = lines.drop(1).takeWhile(String::isNotBlank).map {
-                                    val (destinationStart, sourceStart, length) = it.split(' ').map(String::toLong)
-                                    Conversion.Range(destinationStart, sourceStart, length)
-                                }
-                                put(source, Conversion(source, destination, ranges))
-                                lines.drop(1 + ranges.size)
-                            }
-                            else -> lines.drop(1)
+                lines.consumeTo(mutableMapOf()) { lines, line ->
+                    if (line.isNotBlank()) {
+                        val (source, destination) = line.split("-to-", " ").zipWithNext().first()
+                        val ranges = lines.drop(1).takeWhile(String::isNotBlank).map {
+                            val (destinationStart, sourceStart, length) = it.split(' ').map(String::toLong)
+                            Conversion.Range(destinationStart, sourceStart, length)
                         }
-                    }
+                        put(source, Conversion(source, destination, ranges))
+                        lines.drop(1 + ranges.size)
+                    } else lines.drop(1)
                 }
             )
         }
     }
 
-    private data class SeedRange(val seedStart: Long, val length: Long) : ClosedRange<Long> by (0..<length offset seedStart), Iterable<Long> {
+    private data class SeedRange(val seedStart: Long, val length: Long) :
+        ClosedRange<Long> by (0..<length offset seedStart),
+        Iterable<Long>
+    {
         private val longProgression = LongProgression.fromClosedRange(start, endInclusive, 1)
 
         override fun iterator(): Iterator<Long> = longProgression.iterator()
