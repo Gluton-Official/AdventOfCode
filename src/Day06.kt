@@ -1,17 +1,16 @@
 
 object Day06 : AoCPuzzle() {
     override val part1Test: Test
-        get() = Test(288, """
+        get() = Test(288L, """
             Time:      7  15   30
             Distance:  9  40  200
         """.trimIndent())
 
-    override fun part1(input: List<String>): Int {
-        val times = input.find { it.startsWith("Time") }!!.substringAfter("Time:").trim().split("\\s+".toRegex()).map(String::toInt)
-        val records = input.find { it.startsWith("Distance") }!!.substringAfter("Distance:").trim().split("\\s+".toRegex()).map(String::toInt)
-        val races = times.zip(records)
-        return races.map { it.buttonHoldTimes().count() }.reduce { acc, c -> acc * c }
-    }
+    override fun part1(input: List<String>): Long = input.map {
+        it.substringAfter(':').trim().split("\\s+".toRegex()).map(String::toLong)
+    }.zipWithNext().single().run { first.zip(second) }.map { (duration, recordDistance) ->
+        Race(duration, recordDistance).winningHoldTimes().lengthInclusive
+    }.reduce { acc, c -> acc * c }
 
     override val part2Test: Test
         get() = Test(71503L, """
@@ -19,41 +18,15 @@ object Day06 : AoCPuzzle() {
             Distance:  9  40  200
         """.trimIndent())
 
-    override fun part2(input: List<String>): Long {
-        val time = input.find { it.startsWith("Time") }!!.substringAfter("Time:").replace("\\s+".toRegex(), "").toLong()
-        val record = input.find { it.startsWith("Distance") }!!.substringAfter("Distance:").replace("\\s+".toRegex(), "").toLong()
-        val race = time to record
-        return race.winWays()
+    override fun part2(input: List<String>): Long = input.map {
+        it.substringAfter(':').replace("\\s+".toRegex(), "").toLong()
+    }.zipWithNext().single().let { (duration, recordDistance) ->
+        Race(duration, recordDistance).winningHoldTimes().lengthInclusive
     }
 
-    private fun Pair<Long, Long>.winWays(): Long {
-        val (raceDuration, record) = this
-        val minHoldTime = (0..raceDuration).first { buttonHoldTime ->
-            time(buttonHoldTime, raceDuration) > record
-        }
-        val maxHoldTime = (0..raceDuration).reversed().first { buttonHoldTime ->
-            time(buttonHoldTime, raceDuration) > record
-        }
-        return maxHoldTime - minHoldTime + 1
-    }
-
-    private fun time(buttonHoldTime: Long, raceDuration: Long): Long {
-        val speed = buttonHoldTime
-        val driveDuration = raceDuration - buttonHoldTime
-        return driveDuration * speed
-    }
-
-    private fun Pair<Int, Int>.buttonHoldTimes(): List<Int> {
-        val (raceTime, record) = this
-        return buildList {
-            for (holdTime in 0..raceTime) {
-                val speed = holdTime
-                val driveDuration = raceTime - holdTime
-                val time = driveDuration * speed
-                if (time > record) {
-                    add(time)
-                }
-            }
+    data class Race(val duration: Long, val recordDistance: Long) {
+        fun winningHoldTimes(): LongRange = (0..duration) constrainWith { holdTime ->
+            (duration - holdTime) * holdTime > recordDistance
         }
     }
 

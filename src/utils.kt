@@ -45,6 +45,10 @@ fun downloadInput(
 infix fun IntRange.offset(offset: Int) = (start + offset)..(endInclusive + offset)
 infix fun LongRange.offset(offset: Long) = (start + offset)..(endInclusive + offset)
 
+infix fun LongRange.constrainWith(predicate: (Long) -> Boolean) = first(predicate)..reversed().first(predicate)
+
+val LongRange.lengthInclusive: Long get() = endInclusive - start + 1
+val LongRange.lengthExclusive: Long get() = endInclusive - start
 fun String.consume(action: (String, Char) -> String) {
     var remains = this
     while (remains.isNotEmpty()) {
