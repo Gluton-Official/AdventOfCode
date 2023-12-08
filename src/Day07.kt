@@ -1,7 +1,7 @@
 
 object Day07 : AoCPuzzle() {
     override val part1Test: Test
-        get() = Test(6441, """
+        get() = Test(6440, """
             32T3K 765
             T55J5 684
             KK677 28
