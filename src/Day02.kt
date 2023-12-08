@@ -1,15 +1,16 @@
 
 object Day02 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(8, """
+    override val part1Tests = listOf(
+		Test(8, """
             Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
             Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
             Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
             Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
             Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part1(input: List<String>): Int =
+    override fun part1(input: Input): Int =
         input.map(Game::from).filter { game ->
             game.sets.all {
                 it.red <= setLimit.red &&
@@ -24,16 +25,17 @@ object Day02 : AoCPuzzle() {
         blue = 14,
     )
 
-    override val part2Test: Test
-        get() = Test(2286, """
+    override val part2Tests = listOf(
+		Test(2286, """
             Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
             Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
             Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
             Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
             Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part2(input: List<String>): Int =
+    override fun part2(input: Input): Int =
         input.map(Game::from).sumOf { game ->
             game.sets.fold(Set()) { minSet, set -> minSet.apply {
                 red = red.coerceAtLeast(set.red)

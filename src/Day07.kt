@@ -1,29 +1,31 @@
 
 object Day07 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(6440, """
+    override val part1Tests = listOf(
+       Test(6440, """
             32T3K 765
             T55J5 684
             KK677 28
             KTJJT 220
             QQQJA 483
-        """.trimIndent())
+        """.trimIndent()),
+    )
 
-    override fun part1(input: List<String>): Int = input.map {
+    override fun part1(input: Input): Int = input.map {
         val (cards, bid) = it.split(' ')
         Hand(cards.toCharArray().map { enumValueOf(it.toString()) }, bid.toInt())
     }.sorted().foldIndexed(0) { rank, acc, hand -> acc + hand.bid * (rank + 1) }
 
-    override val part2Test: Test
-        get() = Test(5905, """
+    override val part2Tests = listOf(
+        Test(5905, """
             32T3K 765
             T55J5 684
             KK677 28
             KTJJT 220
             QQQJA 483
-        """.trimIndent())
+        """.trimIndent()),
+    )
 
-    override fun part2(input: List<String>): Int = input.map {
+    override fun part2(input: Input): Int = input.map {
         val (cards, bid) = it.split(' ')
         Hand(cards.toCharArray().map { enumValueOf(it.toString()) }, bid.toInt(), jokers = true)
     }.sorted().foldIndexed(0) { rank, acc, hand -> acc + hand.bid * (rank + 1) }

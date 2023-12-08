@@ -1,19 +1,20 @@
 
 object Day01 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(142, """
+    override val part1Tests = listOf(
+		Test(142, """
             1abc2
             pqr3stu8vwx
             a1b2c3d4e5f
             treb7uchet
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part1(input: List<String>): Int = input.sumOf {
+    override fun part1(input: Input): Int = input.sumOf {
         "${it.first(Char::isDigit)}${it.last(Char::isDigit)}".toInt()
     }
 
-    override val part2Test: Test
-        get() = Test(281, """
+    override val part2Tests = listOf(
+		Test(281, """
             two1nine
             eightwothree
             abcone2threexyz
@@ -21,9 +22,10 @@ object Day01 : AoCPuzzle() {
             4nineeightseven2
             zoneight234
             7pqrstsixteen
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part2(input: List<String>): Int = input.sumOf {
+    override fun part2(input: Input): Int = input.sumOf {
         listOf(it.findAnyOf(digitStrings), it.findLastAnyOf(digitStrings))
             .map { it!!.second }
             .joinToString("") { wordToDigit[it] ?: it }

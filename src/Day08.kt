@@ -1,7 +1,7 @@
 
 object Day08 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(2, """
+    override val part1Tests = listOf(
+        Test(2, """
             RL
 
             AAA = (BBB, CCC)
@@ -11,9 +11,17 @@ object Day08 : AoCPuzzle() {
             EEE = (EEE, EEE)
             GGG = (GGG, GGG)
             ZZZ = (ZZZ, ZZZ)
-        """.trimIndent())
+        """.trimIndent()),
+        Test(6, """
+            LLR
 
-    override fun part1(input: List<String>): Int = NetworkMap(input).run {
+            AAA = (BBB, BBB)
+            BBB = (AAA, ZZZ)
+            ZZZ = (ZZZ, ZZZ)
+        """.trimIndent()),
+    )
+
+    override fun part1(input: Input): Int = NetworkMap(input).run {
         var index = 0
         val directions = generateSequence {
             index %= directions.size
@@ -33,8 +41,8 @@ object Day08 : AoCPuzzle() {
         return steps
     }
 
-    override val part2Test: Test
-        get() = Test(6L, """
+    override val part2Tests = listOf(
+        Test(6L, """
             LR
 
             11A = (11B, XXX)
@@ -45,9 +53,10 @@ object Day08 : AoCPuzzle() {
             22C = (22Z, 22Z)
             22Z = (22B, 22B)
             XXX = (XXX, XXX)
-        """.trimIndent())
+        """.trimIndent()),
+    )
 
-    override fun part2(input: List<String>): Long = NetworkMap(input).run {
+    override fun part2(input: Input): Long = NetworkMap(input).run {
         val ends = nodes.keys.filter { it.endsWith('Z') }
         fun findCycle(startKey: String): Pair<Long, Map<String, Long?>> {
             var index = 0
@@ -68,10 +77,8 @@ object Day08 : AoCPuzzle() {
                 steps++
                 if (current.endsWith('Z')) {
                     if (ends[current] == null) {
-                        println("Start $steps: $index")
                         ends[current] = steps
                     } else {
-                        println("End $steps: $index")
                         ends[current] = steps - ends[current]!!
                         break
                     }
@@ -83,10 +90,7 @@ object Day08 : AoCPuzzle() {
         val starts = nodes.keys.filter { it.endsWith('A') }
         val cyclesForKey = starts.mapParallel { it to findCycle(it) }.toMap()
 
-        println(cyclesForKey)
-
         val steps = cyclesForKey.values.map { it.first to it.second.values.find { it != null }!! }
-        println(steps)
 
         return steps.map { it.second }.reduce(::lcm)
     }

@@ -18,13 +18,15 @@ import kotlin.io.path.Path
 import kotlin.io.path.readLines
 import kotlin.time.measureTimedValue
 
+typealias Input = List<String>
+
 val dotenv = dotenv()
 
 //fun <T> T.println() = also { println(it) }
 
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16).padStart(32, '0')
 
-fun readInput(name: String) = Path("resources/$name.txt").readLines()
+fun readInput(name: String): Input = Path("resources/$name.txt").readLines()
 
 fun downloadInput(
     day: Int = Clock.System.todayIn(TimeZone.currentSystemDefault()).dayOfMonth,

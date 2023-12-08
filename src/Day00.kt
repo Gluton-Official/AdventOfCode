@@ -1,20 +1,22 @@
 
 object Day00 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(0, """
+    override val part1Tests = listOf(
+		Test(0, """
             
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part1(input: List<String>): Int {
+    override fun part1(input: Input): Int {
         return 0
     }
 
-    override val part2Test: Test
-        get() = Test(0, """
+    override val part2Tests = listOf(
+		Test(0, """
             
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part2(input: List<String>): Int {
+    override fun part2(input: Input): Int {
         return 0
     }
 

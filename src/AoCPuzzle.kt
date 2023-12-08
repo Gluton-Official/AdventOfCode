@@ -1,18 +1,15 @@
-import com.github.ajalt.mordant.rendering.BorderType
 import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.TextColors.cyan
-import com.github.ajalt.mordant.rendering.TextColors.gray
 import com.github.ajalt.mordant.rendering.TextColors.brightGreen
 import com.github.ajalt.mordant.rendering.TextColors.brightRed
+import com.github.ajalt.mordant.rendering.TextColors.cyan
+import com.github.ajalt.mordant.rendering.TextColors.gray
 import com.github.ajalt.mordant.rendering.TextColors.yellow
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.bold
-import com.github.ajalt.mordant.rendering.TextStyles.dim
-import com.github.ajalt.mordant.rendering.VerticalAlign
+import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid
 import com.github.ajalt.mordant.table.horizontalLayout
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Padding
@@ -22,19 +19,24 @@ import kotlin.time.measureTimedValue
 abstract class AoCPuzzle {
     private val name = this::class.simpleName!!
     private val day = name.substringAfter("Day").toInt()
-    private val input: List<String> by lazy {
+    private val input: Input by lazy {
         if (!File("resources/$name.txt").exists()) downloadInput(day)
         readInput(name)
     }
 
-    protected open val part1Test = Test()
-    protected open val part2Test = Test()
+    protected open val part1Tests = listOf(Test())
+    protected open val part2Tests = listOf(Test())
 
-    protected open fun part1(input: List<String>): Number = 0
-    protected open fun part2(input: List<String>): Number = 0
+    protected open fun part1(input: Input): Number = 0
+    protected open fun part2(input: Input): Number = 0
 
-    protected fun testPart1() = part1Test.render("Part 1 Test", ::part1)
-    protected fun testPart2() = part2Test.render("Part 2 Test", ::part2)
+    protected fun testPart1() = part1Tests.testAll("Part 1 Test", ::part1)
+    protected fun testPart2() = part2Tests.testAll("Part 2 Test", ::part2)
+
+    private fun <T> List<Test>.testAll(name: String, action: (Input) -> T) =
+        singleOrNull()?.render(name, action) ?: forEachIndexed { index, test ->
+            test.render(name + " ${index + 1}", action)
+        }
 
     protected fun runPart1() = render("Part 1", ::part1)
     protected fun runPart2() = render("Part 2", ::part2)
@@ -45,12 +47,12 @@ abstract class AoCPuzzle {
 
     private val terminal = Terminal()
 
-    private fun <T> render(name: String, action: (List<String>) -> T): T = terminal.run {
+    private fun <T> render(name: String, action: (Input) -> T): T = terminal.run {
         println(HorizontalRule(cyan(name), ruleCharacter = "═", ruleStyle = TextStyle(cyan)))
         renderTimed { action(input) }
     }
 
-    private fun <T> Test.render(name: String, action: (List<String>) -> T) {
+    private fun <T> Test.render(name: String, action: (Input) -> T) {
         with(terminal) {
             println(HorizontalRule(yellow(name), ruleStyle = TextStyle(yellow)))
             val result = action(inputLines)
@@ -89,6 +91,7 @@ abstract class AoCPuzzle {
     protected fun <R> renderTimed(action: () -> R): R {
         val (value, duration) = measureTimedValue(action)
         terminal.println(horizontalLayout {
+            whitespace = Whitespace.PRE_WRAP
             column(0) {
                 width = ColumnWidth.Expand()
             }
@@ -103,6 +106,9 @@ abstract class AoCPuzzle {
         return value
     }
 
-    protected fun println(message: Any?) = terminal.println(gray(message.toString()))
-    protected fun <T> T.println(): T = also { println(this) }
+    protected fun println(message: Any?, style: TextStyle = gray) = terminal.println(
+        style(message.toString()),
+        whitespace = Whitespace.PRE_WRAP
+    )
+    protected fun <T> T.println(style: TextStyle = gray): T = also { println(this, style) }
 }

@@ -1,7 +1,7 @@
 
 object Day03 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(4361, """
+    override val part1Tests = listOf(
+		Test(4361, """
             467..114..
             ...*......
             ..35..633.
@@ -12,9 +12,10 @@ object Day03 : AoCPuzzle() {
             ......755.
             ...${'$'}.*....
             .664.598..
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part1(input: List<String>): Int = Schematic(input).run {
+    override fun part1(input: Input): Int = Schematic(input).run {
         cells.sumOf { row ->
             row.filterIsInstance<Symbol>().sumOf { symbol ->
                 symbol.adjacentCells()
@@ -25,8 +26,8 @@ object Day03 : AoCPuzzle() {
         }
     }
 
-    override val part2Test: Test
-        get() = Test(467835, """
+    override val part2Tests = listOf(
+		Test(467835, """
             467..114..
             ...*......
             ..35..633.
@@ -37,9 +38,10 @@ object Day03 : AoCPuzzle() {
             ......755.
             ...${'$'}.*....
             .664.598..
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part2(input: List<String>): Int = Schematic(input).run {
+    override fun part2(input: Input): Int = Schematic(input).run {
         cells.sumOf { row -> row.asSequence()
             .filterIsInstance<Symbol>()
             .filter(Symbol::isGear)

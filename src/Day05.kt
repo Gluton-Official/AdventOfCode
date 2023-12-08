@@ -1,7 +1,7 @@
 
 object Day05 : AoCPuzzle() {
-    override val part1Test: Test
-        get() = Test(35L, """
+    override val part1Tests = listOf(
+		Test(35L, """
             seeds: 79 14 55 13
 
             seed-to-soil map:
@@ -35,16 +35,17 @@ object Day05 : AoCPuzzle() {
             humidity-to-location map:
             60 56 37
             56 93 4
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part1(input: List<String>): Long = input.let { lines ->
+    override fun part1(input: Input): Long = input.let { lines ->
         lines.first().split(' ').drop(1).map(String::toLong) to Almanac(lines.drop(1))
     }.let { (seeds, almanac) ->
         seeds.minOf { seed -> almanac.locationOf(seed) }
     }
 
-    override val part2Test: Test
-        get() = Test(46L, """
+    override val part2Tests = listOf(
+		Test(46L, """
             seeds: 79 14 55 13
 
             seed-to-soil map:
@@ -78,9 +79,10 @@ object Day05 : AoCPuzzle() {
             humidity-to-location map:
             60 56 37
             56 93 4
-        """.trimIndent())
+        """.trimIndent()),
+	)
 
-    override fun part2(input: List<String>): Long = input.let { lines ->
+    override fun part2(input: Input): Long = input.let { lines ->
         val seedRanges = lines.first().split(' ').drop(1)
             .map(String::toLong)
             .chunked(2) { (first, second) -> SeedRange(first, second) }
