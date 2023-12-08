@@ -1,7 +1,7 @@
 
 object Day07 : AoCPuzzle() {
     override val part1Test: Test
-        get() = Test(6440, """
+        get() = Test(6441, """
             32T3K 765
             T55J5 684
             KK677 28
@@ -116,9 +116,9 @@ object Day07 : AoCPuzzle() {
     @JvmStatic
     fun main(args: Array<String>) {
         testPart1()
-        testPart2()
-
         runPart1()
+
+        testPart2()
         runPart2()
     }
 }

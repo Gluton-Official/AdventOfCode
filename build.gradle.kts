@@ -10,6 +10,7 @@ dependencies {
     val ktorVersion = "2.3.6"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("com.github.ajalt.mordant:mordant:2.2.0")
     implementation(kotlin("test"))
 }
 

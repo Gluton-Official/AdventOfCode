@@ -33,9 +33,9 @@ object Day06 : AoCPuzzle() {
     @JvmStatic
     fun main(args: Array<String>) {
         testPart1()
-        testPart2()
-
         runPart1()
+
+        testPart2()
         runPart2()
     }
 }
