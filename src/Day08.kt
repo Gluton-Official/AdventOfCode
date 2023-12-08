@@ -57,17 +57,11 @@ object Day08 : AoCPuzzle() {
     )
 
     override fun part2(input: Input): Long = NetworkMap(input).run {
-        val ends = nodes.keys.filter { it.endsWith('Z') }
-        fun findCycle(startKey: String): Pair<Long, Map<String, Long?>> {
-            var index = 0
-            val directions = generateSequence {
-                index %= directions.size
-                directions[index++]
-            }.iterator()
-            val ends = ends.associateWith<String, Long?> { null }.toMutableMap()
+        fun findCycle(startKey: String): Long {
+            val directions = directions.cyclicIterator()
             var steps = 0L
             var current = startKey
-            while (true) {
+            do {
                 current = nodes[current]!!.run {
                     when (directions.next()) {
                         Direction.L -> first
@@ -75,31 +69,19 @@ object Day08 : AoCPuzzle() {
                     }
                 }
                 steps++
-                if (current.endsWith('Z')) {
-                    if (ends[current] == null) {
-                        ends[current] = steps
-                    } else {
-                        ends[current] = steps - ends[current]!!
-                        break
-                    }
-                }
-            }
-            return steps to ends
+            } while (!current.endsWith('Z'))
+            return steps
         }
 
         val starts = nodes.keys.filter { it.endsWith('A') }
-        val cyclesForKey = starts.mapParallel { it to findCycle(it) }.toMap()
-
-        val steps = cyclesForKey.values.map { it.first to it.second.values.find { it != null }!! }
-
-        return steps.map { it.second }.reduce(::lcm)
+        return starts.map(::findCycle).reduce(::lcm)
     }
 
     private fun lcm(a: Long, b: Long): Long = a * b / gcd(a, b)
 
     private fun gcd(a: Long, b: Long): Long {
         var (a, b) = a to b
-        var temp = 0L
+        var temp: Long
         while (b != 0L) {
             temp = b
             b = a % b

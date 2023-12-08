@@ -56,6 +56,15 @@ infix fun LongRange.constrainWith(predicate: (Long) -> Boolean) = first(predicat
 val LongRange.lengthInclusive: Long get() = endInclusive - start + 1
 val LongRange.lengthExclusive: Long get() = endInclusive - start
 
+fun <T> List<T>.cyclicIterator(): Iterator<T> = asCyclicSequence().iterator()
+fun <T> List<T>.asCyclicSequence(): Sequence<T> {
+    var index = 0
+    return generateSequence {
+        index %= size
+        get(index++)
+    }
+}
+
 fun <T : ClosedRange<Long>> T.chunked(chunkSize: Long): List<LongRange> = buildList {
     val length = endInclusive - start
     val chunks = length / chunkSize
