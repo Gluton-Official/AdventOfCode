@@ -89,7 +89,7 @@ object Day05 : AoCPuzzle() {
         val almanac = Almanac(lines.drop(1))
 
         val threadCount = Runtime.getRuntime().availableProcessors().toLong()
-        seedRanges.minOf { seedRange -> timed {
+        seedRanges.minOf { seedRange -> renderTimed {
             seedRange.split(threadCount).mapParallel {
                 it.minOf { seed -> almanac.locationOf(seed) }
             }.min()

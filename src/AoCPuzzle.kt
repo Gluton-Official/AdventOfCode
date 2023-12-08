@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.TextColors.cyan
 import com.github.ajalt.mordant.rendering.TextColors.gray
 import com.github.ajalt.mordant.rendering.TextColors.yellow
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles.reset
 import com.github.ajalt.mordant.rendering.TextStyles.bold
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
@@ -49,7 +50,7 @@ abstract class AoCPuzzle {
 
     private fun <T> render(name: String, action: (Input) -> T): T = terminal.run {
         println(HorizontalRule(cyan(name), ruleCharacter = "═", ruleStyle = TextStyle(cyan)))
-        renderTimed { action(input) }
+        renderTimed(bold.style) { action(input) }
     }
 
     private fun <T> Test.render(name: String, action: (Input) -> T) {
@@ -88,7 +89,7 @@ abstract class AoCPuzzle {
         }
     }
 
-    protected fun <R> renderTimed(action: () -> R): R {
+    protected fun <R> renderTimed(style: TextStyle = reset.style, action: () -> R): R {
         val (value, duration) = measureTimedValue(action)
         terminal.println(horizontalLayout {
             whitespace = Whitespace.PRE_WRAP
@@ -100,7 +101,7 @@ abstract class AoCPuzzle {
                 padding = Padding { left = 1 }
                 align = TextAlign.RIGHT
             }
-            cell(bold(value.toString()))
+            cell(style(value.toString()))
             cell(gray(duration.toString()))
         })
         return value

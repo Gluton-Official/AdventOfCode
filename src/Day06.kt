@@ -26,7 +26,7 @@ object Day06 : AoCPuzzle() {
         Race(duration, recordDistance).winningHoldTimes().lengthInclusive
     }
 
-    data class Race(val duration: Long, val recordDistance: Long) {
+    private data class Race(val duration: Long, val recordDistance: Long) {
         fun winningHoldTimes(): LongRange = (0..duration) constrainWith { holdTime ->
             (duration - holdTime) * holdTime > recordDistance
         }

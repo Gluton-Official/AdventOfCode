@@ -44,7 +44,7 @@ object Day02 : AoCPuzzle() {
             }}.run { red * green * blue }
         }
 
-    data class Game(val id: Int, val sets: List<Set>) {
+    private data class Game(val id: Int, val sets: List<Set>) {
         companion object {
             fun from(string: String): Game {
                 val (id, sets) = string.split(':').let { (idString, setsString) ->
@@ -60,7 +60,7 @@ object Day02 : AoCPuzzle() {
         }
     }
 
-    data class Set(var red: Int = 0, var green: Int = 0, var blue: Int = 0)
+    private data class Set(var red: Int = 0, var green: Int = 0, var blue: Int = 0)
     
     @JvmStatic
     fun main(args: Array<String>) {
