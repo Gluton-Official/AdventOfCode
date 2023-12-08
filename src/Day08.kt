@@ -22,11 +22,7 @@ object Day08 : AoCPuzzle() {
     )
 
     override fun part1(input: Input): Int = NetworkMap(input).run {
-        var index = 0
-        val directions = generateSequence {
-            index %= directions.size
-            directions[index++]
-        }.iterator()
+        val directions = directions.cyclicIterator()
         var steps = 0
         var current = "AAA"
         do {
