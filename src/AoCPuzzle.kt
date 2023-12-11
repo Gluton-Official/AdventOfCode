@@ -34,10 +34,10 @@ abstract class AoCPuzzle {
     protected fun testPart1() = part1Tests.testAll("Part 1 Test", ::part1)
     protected fun testPart2() = part2Tests.testAll("Part 2 Test", ::part2)
 
-    private fun <T> List<Test>.testAll(name: String, action: (Input) -> T) =
-        singleOrNull()?.render(name, action) ?: forEachIndexed { index, test ->
+    private fun <T> List<Test>.testAll(name: String, action: (Input) -> T): Boolean =
+        singleOrNull()?.render(name, action) ?: mapIndexed { index, test ->
             test.render(name + " ${index + 1}", action)
-        }
+        }.all { it }
 
     protected fun runPart1() = render("Part 1", ::part1)
     protected fun runPart2() = render("Part 2", ::part2)
@@ -53,7 +53,7 @@ abstract class AoCPuzzle {
         renderTimed(bold.style) { action(input) }
     }
 
-    private fun <T> Test.render(name: String, action: (Input) -> T) {
+    private fun <T> Test.render(name: String, action: (Input) -> T): Boolean =
         with(terminal) {
             println(HorizontalRule(yellow(name), ruleStyle = TextStyle(yellow)))
             val result = action(inputLines)
@@ -86,8 +86,8 @@ abstract class AoCPuzzle {
                     }
                 })
             }
+            passed
         }
-    }
 
     protected fun <R> renderTimed(style: TextStyle = reset.style, action: () -> R): R {
         val (value, duration) = measureTimedValue(action)

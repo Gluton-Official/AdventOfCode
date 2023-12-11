@@ -58,10 +58,12 @@ object Day04 : AoCPuzzle() {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        testPart1()
-        runPart1()
+        if (testPart1()) {
+            runPart1()
+        }
 
-        testPart2()
-        runPart2()
+        if (testPart2()) {
+            runPart2()
+        }
     }
 }
