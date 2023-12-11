@@ -35,7 +35,10 @@ fun downloadInput(
     require(day in 1..25)
     require(year >= 2015)
     val targetDate = LocalDate(year, 12, day)
-    require(targetDate <= Clock.System.todayIn(TimeZone.currentSystemDefault()))
+    val dateNow = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    require(targetDate <= dateNow) {
+        "$targetDate has not yet occurred (today: $dateNow)"
+    }
 
     val text: String = runBlocking {
         HttpClient {
