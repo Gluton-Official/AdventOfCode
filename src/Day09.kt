@@ -17,10 +17,9 @@ object Day09 : AoCPuzzle() {
         }
         for (sequenceIndex in sequences.indices.reversed()) {
             val sequence = sequences[sequenceIndex]
-            if (sequenceIndex == sequences.indices.last) {
-                sequence += 0
-            } else {
-                sequence += sequence.last() + sequences[sequenceIndex + 1].last()
+            sequence += when (sequenceIndex) {
+                sequences.indices.last -> 0
+                else -> sequence.last() + sequences[sequenceIndex + 1].last()
             }
         }
         sequences.first().last()
@@ -43,11 +42,10 @@ object Day09 : AoCPuzzle() {
         }
         for (sequenceIndex in sequences.indices.reversed()) {
             val sequence = sequences[sequenceIndex]
-            if (sequenceIndex == sequences.indices.last) {
-                sequence.add(0, 0)
-            } else {
-                sequence.add(0, sequence.first() - sequences[sequenceIndex + 1].first())
-            }
+            sequence.add(0, when (sequenceIndex) {
+                sequences.indices.last -> 0
+                else -> sequence.first() - sequences[sequenceIndex + 1].first()
+            })
         }
         sequences.first().first()
     }
