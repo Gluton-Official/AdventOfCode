@@ -1,55 +1,18 @@
-import io.github.cdimascio.dotenv.dotenv
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.cookie
-import io.ktor.client.request.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
-import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
-import kotlin.io.path.Path
-import kotlin.io.path.readLines
 import kotlin.time.measureTimedValue
-
-typealias Input = List<String>
-
-val dotenv = dotenv()
-
-//fun <T> T.println() = also { println(it) }
 
 fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16).padStart(32, '0')
 
-fun readInput(name: String): Input = Path("resources/$name.txt").readLines()
+val Int.rangeInclusive: IntRange get() = IntRange(0, this)
+val Int.rangeExclusive: IntRange get() = IntRange(0, this - 1)
 
-fun downloadInput(
-    day: Int = Clock.System.todayIn(TimeZone.currentSystemDefault()).dayOfMonth,
-    year: Int = Clock.System.todayIn(TimeZone.currentSystemDefault()).year,
-) {
-    require(day in 1..25)
-    require(year >= 2015)
-    val targetDate = LocalDate(year, 12, day)
-    val dateNow = Clock.System.todayIn(TimeZone.currentSystemDefault())
-    require(targetDate <= dateNow) {
-        "$targetDate has not yet occurred (today: $dateNow)"
-    }
-
-    val text: String = runBlocking {
-        HttpClient {
-            expectSuccess = true
-        }.get("https://adventofcode.com/$year/day/$day/input") {
-            cookie("session", dotenv["session"])
-        }.body()
-    }
-
-    File("resources/Day${"%02d".format(day)}.txt").writeText(text)
-}
+val Long.rangeInclusive: LongRange get() = LongRange(0, this)
+val Long.rangeExclusive: LongRange get() = LongRange(0, this - 1)
 
 infix fun IntRange.offset(offset: Int) = (start + offset)..(endInclusive + offset)
 infix fun LongRange.offset(offset: Long) = (start + offset)..(endInclusive + offset)
@@ -82,35 +45,38 @@ fun <T : ClosedRange<Long>> T.chunked(chunkSize: Long): List<LongRange> = buildL
 
 fun <T : ClosedRange<Long>> T.split(count: Long): List<LongRange> = chunked((endInclusive - start) / count)
 
-fun String.consume(action: (String, Char) -> String) {
+fun <T : CharSequence> T.consume(action: (T, Char) -> T) {
     var remains = this
     while (remains.any()) {
         remains = action(remains, remains.first())
     }
 }
-
 fun <T : Iterable<E>, E> T.consume(action: (T, E) -> T) {
     var remains = this
     while (remains.any()) {
         remains = action(remains, remains.first())
     }
 }
-
-fun <T : Iterable<E>, E, C> T.consumeTo(destination: C, action: C.(T, E) -> T): C {
+fun <T : Iterable<R>, R, C> T.consumeTo(destination: C, action: C.(T, R) -> T): C {
     var remains = this
     while (remains.any()) {
         remains = destination.action(remains, remains.first())
     }
     return destination
 }
-
-fun String.consumeIndexed(action: (Int, String, Char) -> String) {
+fun <T : CharSequence> T.consumeIndexed(action: (Int, T, Char) -> T) {
     val initialLength = length
     var remains = this
     while (remains.any()) {
         remains = action(initialLength - remains.length, remains, remains.first())
     }
 }
+
+fun <T, R> Iterable<T>.zipWith(other: R): List<Pair<T, R>> = map { it to other }
+fun <T, R, V> Iterable<T>.zipWith(other: R, transform: (Pair<T, R>) -> V): List<V> = map { transform(it to other) }
+fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) -> V): List<V> =
+    mapIndexed { index, it -> transform(index, it to other) }
+
 
 // TODO: try to do automatic splitting
 fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
