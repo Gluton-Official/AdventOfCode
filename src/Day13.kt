@@ -75,8 +75,8 @@ object Day13 : AoCPuzzle() {
     private fun findMirrorIndex(pattern: List<String>): Int? {
         val hashes = pattern.map(String::hashCode)
         for (index in 1..hashes.lastIndex) {
-            val before = hashes.drop(index).asSequence()
-            val after = hashes.asReversed().drop(hashes.size - index).asSequence()
+            val after = hashes.drop(index).asSequence()
+            val before = hashes.asReversed().drop(hashes.size - index).asSequence()
 
             val mirroredPairs = before.zip(after)
             if (mirroredPairs.all { (first, second) -> first == second }) {
@@ -88,8 +88,8 @@ object Day13 : AoCPuzzle() {
 
     private fun findSmudgyMirrorIndex(pattern: List<String>): Int? {
         for (index in 1..pattern.lastIndex) {
-            val before = pattern.drop(index)
-            val after = pattern.asReversed().drop(pattern.size - index)
+            val after = pattern.drop(index)
+            val before = pattern.asReversed().drop(pattern.size - index)
 
             val mirroredPairs = before.zip(after)
             val diffs = mirroredPairs.sumOf { (first, second) ->
