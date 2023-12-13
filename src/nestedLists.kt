@@ -39,10 +39,10 @@ fun <T> List2D<T>.rows(): List2D<T> = this
 fun <T> Collection<List<T>>.columns(): List2D<T> =
     indices.collectionsMap { columnIndex -> collectionsMap { row -> row[columnIndex] } }
 
-fun Collection<CharSequence>.columns(): List<String> =
+fun Collection<CharSequence>.columnStrings(): List<String> =
     indices.collectionsMap { columnIndex ->
         buildString {
-            this@columns.forEach { row ->
+            this@columnStrings.forEach { row ->
                 append(row[columnIndex])
             }
         }

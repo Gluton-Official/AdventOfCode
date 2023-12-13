@@ -51,7 +51,7 @@ fun <T : CharSequence> T.consume(action: (T, Char) -> T) {
         remains = action(remains, remains.first())
     }
 }
-fun <T : Iterable<E>, E> T.consume(action: (T, E) -> T) {
+fun <T : Iterable<R>, R> T.consume(action: (T, R) -> T) {
     var remains = this
     while (remains.any()) {
         remains = action(remains, remains.first())
@@ -69,6 +69,13 @@ fun <T : CharSequence> T.consumeIndexed(action: (Int, T, Char) -> T) {
     var remains = this
     while (remains.any()) {
         remains = action(initialLength - remains.length, remains, remains.first())
+    }
+}
+fun <T : List<R>, R> T.consumeIndexed(action: (Int, T, R) -> T) {
+    val initialLength = size
+    var remains = this
+    while (remains.any()) {
+        remains = action(initialLength - remains.size, remains, remains.first())
     }
 }
 
