@@ -40,7 +40,7 @@ fun <T> Collection<List<T>>.columns(): List2D<T> =
     indices.collectionsMap { columnIndex -> collectionsMap { row -> row[columnIndex] } }
 
 fun Collection<CharSequence>.columnStrings(): List<String> =
-    indices.collectionsMap { columnIndex ->
+    first().indices.collectionsMap { columnIndex ->
         buildString {
             this@columnStrings.forEach { row ->
                 append(row[columnIndex])
@@ -48,7 +48,8 @@ fun Collection<CharSequence>.columnStrings(): List<String> =
         }
     }
 
-fun <T> List<List<T>>.transposed() = columns()
+fun <T> Collection<List<T>>.transposed() = columns()
+fun Collection<CharSequence>.transposedStrings() = columnStrings()
 
 // TODO: use generics for iterable children
 fun <T> Iterable2D<T>.forEach(action: (T) -> Unit) {
@@ -110,6 +111,14 @@ fun <T, R> Iterable<T>.uniquePairsIndexed(transform: Pair<T, T>.(Position) -> R)
             }.also { removeFirst() }
         }
     }
+
+fun <T> Iterable2D<T>.prettyToString(): String = buildString {
+    append('[')
+    collectionsForEach {
+        append("   ", it)
+    }
+    append(']')
+}
 
 data class Position(val row: Int, val column: Int) {
     fun distance(other: Position): Float = (other.row - row) / (other.column - column).toFloat()
