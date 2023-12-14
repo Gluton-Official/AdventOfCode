@@ -19,6 +19,9 @@ infix fun LongRange.offset(offset: Long) = (start + offset)..(endInclusive + off
 
 infix fun LongRange.constrainWith(predicate: (Long) -> Boolean) = first(predicate)..reversed().first(predicate)
 
+val IntRange.lengthInclusive: Int get() = endInclusive - start + 1
+val IntRange.lengthExclusive: Int get() = endInclusive - start
+
 val LongRange.lengthInclusive: Long get() = endInclusive - start + 1
 val LongRange.lengthExclusive: Long get() = endInclusive - start
 

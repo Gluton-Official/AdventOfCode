@@ -114,8 +114,18 @@ fun <T, R> Iterable<T>.uniquePairsIndexed(transform: Pair<T, T>.(Position) -> R)
 
 fun <T> Iterable2D<T>.prettyToString(): String = buildString {
     append('[')
-    collectionsForEach {
-        append("   ", it)
+    collectionsForEachIndexed { index, row ->
+        if (index != 0) append(",\n ")
+        append(row)
+    }
+    append(']')
+}
+
+fun Iterable<String>.prettyPrint(): String = buildString {
+    append('[')
+    collectionsForEachIndexed { index, row ->
+        if (index != 0) append(",\n ")
+        append(row)
     }
     append(']')
 }
