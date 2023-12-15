@@ -18,21 +18,20 @@ object Day15 : AoCPuzzle() {
 	)
 
     override fun part2(input: Input): Int {
-        val boxes = (0..<256).associateWith { mutableMapOf<String, Int>() }.toMutableMap()
-
-        input.first().split(',').forEach { step ->
-            when {
-                step.contains('=') -> {
-                    val (label, focalLength) = step.split('=')
-                    boxes[hash(label)]!![label] = focalLength.toInt()
-                }
-                step.contains('-') -> {
-                    val (label) = step.split('-')
-                    boxes[hash(label)]!! -= label
+        val boxes = buildMap<Int, MutableMap<String, Int>> {
+            input.first().split(',').forEach { step ->
+                when {
+                    step.contains('=') -> {
+                        val (label, focalLength) = step.split('=')
+                        getOrPut(hash(label), ::mutableMapOf)[label] = focalLength.toInt()
+                    }
+                    step.contains('-') -> {
+                        val (label) = step.split('-')
+                        get(hash(label))?.remove(label)
+                    }
                 }
             }
         }
-
         return boxes.entries.fold(0) { acc, (index, lenses) ->
             acc + lenses.values.zipWithIndexed(index + 1) { slotIndex, (focalLength, box) ->
                 box * (slotIndex + 1) * focalLength
@@ -40,7 +39,7 @@ object Day15 : AoCPuzzle() {
         }
     }
 
-    private fun hash(step: String): Int = step.chars().toList().fold(0) { acc, char -> ((acc + char) * 17) % 256 }
+    private fun hash(value: String): Int = value.fold(0) { acc, char -> ((acc + char.code) * 17) % 256 }
 
     @JvmStatic
     fun main(args: Array<String>) {
