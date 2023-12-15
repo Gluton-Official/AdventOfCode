@@ -1,3 +1,6 @@
+import util.Input
+import util.columnStrings
+import util.consume
 
 object Day13 : AoCPuzzle() {
     override val part1Tests = listOf(

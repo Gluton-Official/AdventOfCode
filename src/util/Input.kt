@@ -1,3 +1,7 @@
+@file:Suppress("NAME_SHADOWING")
+
+package util
+
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -14,9 +18,7 @@ import kotlin.io.path.readLines
 
 typealias Input = List<String>
 
-val dotenv = dotenv()
-
-fun readInput(name: String): Input = Path("resources/$name.txt").readLines()
+private val dotenv = dotenv()
 
 fun downloadInput(
     day: Int? = null,
@@ -41,3 +43,5 @@ fun downloadInput(
 
     File("resources/Day${"%02d".format(day)}.txt").writeText(text)
 }
+
+fun readInput(name: String): Input = Path("resources/$name.txt").readLines()

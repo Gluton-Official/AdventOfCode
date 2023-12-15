@@ -1,3 +1,7 @@
+import util.Input
+import util.columnStrings
+import util.lengthExclusive
+import util.transposedStrings
 
 object Day14 : AoCPuzzle() {
     override val part1Tests = listOf(
@@ -40,8 +44,8 @@ object Day14 : AoCPuzzle() {
         var cycle = 0
         while (cycle < cycles) {
             val uid = uniqueIdentifierOf(currentDish)
-            val cycleLoopStart = previousCycles.indexOfFirst { it == uid }
-            if (cycleLoopStart != -1) {
+            val cycleLoopStart = previousCycles.indexOfFirst { it == uid }.takeUnless { it == -1 }
+            if (cycleLoopStart != null) {
                 cycleRange = cycleLoopStart..cycle
                 break
             }

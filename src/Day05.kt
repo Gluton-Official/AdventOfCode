@@ -1,3 +1,8 @@
+import util.Input
+import util.consumeTo
+import util.mapParallel
+import util.offset
+import util.split
 
 object Day05 : AoCPuzzle() {
     override val part1Tests = listOf(

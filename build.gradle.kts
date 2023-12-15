@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.config.LanguageVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.9.20"
 }
@@ -12,6 +16,13 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("com.github.ajalt.mordant:mordant:2.2.0")
     implementation(kotlin("test"))
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.apply {
+        languageVersion = KotlinVersion.KOTLIN_2_1.version
+        apiVersion = KotlinVersion.KOTLIN_2_1.version
+    }
 }
 
 sourceSets {

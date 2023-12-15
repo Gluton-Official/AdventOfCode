@@ -1,3 +1,5 @@
+import util.Input
+import util.uniquePairs
 import kotlin.math.absoluteValue
 
 object Day11 : AoCPuzzle() {

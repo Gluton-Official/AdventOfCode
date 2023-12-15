@@ -1,3 +1,5 @@
+package util
+
 import kotlin.math.absoluteValue
 import kotlin.collections.forEach as collectionsForEach
 import kotlin.collections.forEachIndexed as collectionsForEachIndexed
@@ -5,7 +7,6 @@ import kotlin.collections.onEach as collectionsOnEach
 import kotlin.collections.fold as collectionsFold
 import kotlin.collections.foldIndexed as collectionsFoldIndexed
 import kotlin.collections.map as collectionsMap
-import kotlin.collections.mapTo as collectionsMapTo
 import kotlin.collections.mapIndexed as collectionsMapIndexed
 import kotlin.collections.flatMap as collectionsFlatMap
 import kotlin.collections.flatMapIndexed as collectionsFlatMapIndexed

@@ -1,3 +1,5 @@
+import util.Input
+import util.offset
 import kotlin.math.pow
 
 object Day04 : AoCPuzzle() {

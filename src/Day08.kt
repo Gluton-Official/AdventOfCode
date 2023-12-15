@@ -1,3 +1,5 @@
+import util.Input
+import util.cyclicIterator
 
 object Day08 : AoCPuzzle() {
     override val part1Tests = listOf(

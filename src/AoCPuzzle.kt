@@ -14,6 +14,9 @@ import com.github.ajalt.mordant.table.horizontalLayout
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Padding
+import util.Input
+import util.downloadInput
+import util.readInput
 import java.io.File
 import kotlin.time.measureTimedValue
 

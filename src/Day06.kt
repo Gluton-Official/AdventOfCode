@@ -1,3 +1,6 @@
+import util.Input
+import util.constrainWith
+import util.lengthInclusive
 
 object Day06 : AoCPuzzle() {
     override val part1Tests = listOf(
