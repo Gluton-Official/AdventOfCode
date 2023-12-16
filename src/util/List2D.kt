@@ -1,6 +1,5 @@
 package util
 
-import kotlin.math.absoluteValue
 import kotlin.collections.forEach as collectionsForEach
 import kotlin.collections.forEachIndexed as collectionsForEachIndexed
 import kotlin.collections.onEach as collectionsOnEach
@@ -129,10 +128,4 @@ fun Iterable<String>.prettyPrint(): String = buildString {
         append(row)
     }
     append(']')
-}
-
-data class Position(val row: Int, val column: Int) {
-    fun distance(other: Position): Float = (other.row - row) / (other.column - column).toFloat()
-    fun manhattanDistance(other: Position): Int =
-        (row - other.row).absoluteValue + (column - other.column).absoluteValue
 }
