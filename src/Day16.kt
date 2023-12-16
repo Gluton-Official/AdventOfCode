@@ -23,7 +23,7 @@ object Day16 : AoCPuzzle() {
         """.trimIndent()),
 	)
 
-    override fun part1(input: Input): Int = energize(input, Beam(East, Position(0, 0)))
+    override fun part1(input: Input): Int = input.energize(Beam(East, Position(0, 0)))
 
     override val part2Tests = listOf(
 		Test(51, """
@@ -52,11 +52,11 @@ object Day16 : AoCPuzzle() {
                 add(Beam(North, Position(rows - 1, column)))
             }
         }
-        return entryBeams.maxOf { energize(input, it) }
+        return entryBeams.maxOf { input.energize(it) }
     }
 
-    private fun energize(contraption: Input, entryBeam: Beam): Int {
-        val contraption = contraption.map { row -> row.map(Tile::invoke) }
+    private fun Input.energize(entryBeam: Beam): Int {
+        val contraption = map { row -> row.map(Tile::invoke) }
         val beams = arrayDequeOf(entryBeam)
         while (beams.isNotEmpty()) {
             val beam = beams.removeFirst()
