@@ -59,3 +59,5 @@ fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) 
 // TODO: try to do automatic splitting
 fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
     runBlocking { map { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
+
+fun <T> arrayDequeOf(vararg elements: T): ArrayDeque<T> = ArrayDeque(elements.toList())

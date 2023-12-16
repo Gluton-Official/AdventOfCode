@@ -2,6 +2,7 @@ import util.Direction
 import util.Direction.*
 import util.Input
 import util.Position
+import util.arrayDequeOf
 import util.count
 import util.getOrNull
 import util.rangeExclusive
@@ -56,7 +57,7 @@ object Day16 : AoCPuzzle() {
 
     private fun energize(contraption: Input, entryBeam: Beam): Int {
         val contraption = contraption.map { row -> row.map(Tile::invoke) }
-        val beams = ArrayDeque<Beam>().apply { add(entryBeam) }
+        val beams = arrayDequeOf(entryBeam)
         while (beams.isNotEmpty()) {
             val beam = beams.removeFirst()
             beams.addAll(contraption.process(beam) ?: continue)
