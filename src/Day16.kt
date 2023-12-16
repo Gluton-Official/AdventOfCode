@@ -22,15 +22,7 @@ object Day16 : AoCPuzzle() {
         """.trimIndent()),
 	)
 
-    override fun part1(input: Input): Int {
-        val contraption = input.map { row -> row.map(Tile::invoke) }
-        val beams = ArrayDeque<Beam>().apply { add(Beam(East, Position(0, 0))) }
-        while (beams.isNotEmpty()) {
-            val beam = beams.removeFirst()
-            beams.addAll(contraption.process(beam) ?: continue)
-        }
-        return contraption.count { it.energized }
-    }
+    override fun part1(input: Input): Int = energize(input, Beam(East, Position(0, 0)))
 
     override val part2Tests = listOf(
 		Test(51, """
@@ -59,15 +51,17 @@ object Day16 : AoCPuzzle() {
                 add(Beam(North, Position(rows - 1, column)))
             }
         }
-        return entryBeams.maxOf { entryBeam ->
-            val contraption = input.map { row -> row.map(Tile::invoke) }
-            val beams = ArrayDeque<Beam>().apply { add(entryBeam) }
-            while (beams.isNotEmpty()) {
-                val beam = beams.removeFirst()
-                beams.addAll(contraption.process(beam) ?: continue)
-            }
-            contraption.count { it.energized }
+        return entryBeams.maxOf { energize(input, it) }
+    }
+
+    private fun energize(contraption: Input, entryBeam: Beam): Int {
+        val contraption = contraption.map { row -> row.map(Tile::invoke) }
+        val beams = ArrayDeque<Beam>().apply { add(entryBeam) }
+        while (beams.isNotEmpty()) {
+            val beam = beams.removeFirst()
+            beams.addAll(contraption.process(beam) ?: continue)
         }
+        return contraption.count { it.energized }
     }
 
     private fun List<List<Tile>>.process(beam: Beam): List<Beam>? =
