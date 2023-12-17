@@ -3,7 +3,7 @@ import util.Direction.*
 import util.Input
 import util.Position
 import util.arrayDequeOf
-import util.count
+import util.count2D
 import util.getOrNull
 import util.rangeExclusive
 
@@ -62,7 +62,7 @@ object Day16 : AoCPuzzle() {
             val beam = beams.removeFirst()
             beams.addAll(contraption.process(beam) ?: continue)
         }
-        return contraption.count { it.energized }
+        return contraption.count2D { it.energized }
     }
 
     private fun List<List<Tile>>.process(beam: Beam): List<Beam>? =

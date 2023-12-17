@@ -1,5 +1,6 @@
 package util
 
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -59,5 +60,30 @@ fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) 
 // TODO: try to do automatic splitting
 fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
     runBlocking { map { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
+
+
+fun <T> Iterable<T>.uniquePairs(): List<Pair<T, T>> = with(toMutableList()) {
+    this@uniquePairs.flatMap { zipWith(it).also { removeFirst() } }
+}
+fun <T, R> Iterable<T>.uniquePairs(transform: Pair<T, T>.() -> R): List<R> = with(toMutableList()) {
+    this@uniquePairs.flatMap { zipWith(it, transform).also { removeFirst() } }
+}
+fun <T, R> Iterable<T>.uniquePairsIndexed(transform: Pair<T, T>.(Position) -> R): List<R> =
+    with(toMutableList()) {
+        this@uniquePairsIndexed.flatMapIndexed { rowIndex, rowElement ->
+            zipWithIndexed(rowElement) { columnIndex, pair ->
+                pair.transform(Position(rowIndex, columnIndex))
+            }.also { removeFirst() }
+        }
+    }
+
+fun Iterable<String>.prettyToString(): String = buildString {
+    append('[')
+    forEachIndexed { index, row ->
+        if (index != 0) append(",\n ")
+        append(row)
+    }
+    append(']')
+}
 
 fun <T> arrayDequeOf(vararg elements: T): ArrayDeque<T> = ArrayDeque(elements.toList())
