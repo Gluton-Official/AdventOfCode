@@ -60,7 +60,8 @@ fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) 
 // TODO: try to do automatic splitting
 fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
     runBlocking { map { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
-
+fun <T, R> Iterable<T>.parallel(function: Iterable<T>.((T) -> Deferred<R>) -> List<Deferred<R>>, transform: (T) -> R): List<R> =
+    runBlocking { function { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
 
 fun <T> Iterable<T>.uniquePairs(): List<Pair<T, T>> = with(toMutableList()) {
     this@uniquePairs.flatMap { zipWith(it).also { removeFirst() } }
