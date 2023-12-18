@@ -3,6 +3,9 @@ package util
 typealias List2D<T> = List<List<T>>
 typealias Iterable2D<T> = Iterable<Iterable<T>>
 
+val <T> List2D<T>.width: Int get() = rowOrNull(0)?.size ?: 0
+val <T> List2D<T>.height: Int get() = size
+
 operator fun <T> List2D<T>.get(row: Int, column: Int): T = this[row][column]
 operator fun <T> List2D<T>.get(position: Position): T = get(position.row, position.column)
 fun <T> List2D<T>.getOrNull(row: Int, column: Int): T? = getOrNull(row)?.getOrNull(column)
@@ -73,6 +76,7 @@ fun <T> Iterable2D<T>.count2DIndexed(predicate: Position.(T) -> Boolean): Int =
     }
 
 fun <T, R> Iterable2D<T>.map2D(transform: (T) -> R): List2D<R> = map { row -> row.map(transform) }
+fun <R> Iterable<CharSequence>.mapStrings2D(transform: (Char) -> R): List2D<R> = map { row -> row.map(transform) }
 fun <T, R> Iterable2D<T>.map2DIndexed(transform: Position.(T) -> R): List2D<R> = mapIndexed { rowIndex, row ->
     row.mapIndexed { columnIndex, element -> Position(rowIndex, columnIndex).transform(element) }
 }
@@ -89,7 +93,7 @@ fun <T, R> Iterable<T>.zipTo2D(transform: Pair<T, T>.() -> R): List2D<R> =
 
 fun <T> Iterable2D<T>.prettyToString2D(): String = buildString {
     append('[')
-    forEachIndexed { index, row ->
+    this@prettyToString2D.forEachIndexed { index, row ->
         if (index != 0) append(",\n ")
         append(row)
     }

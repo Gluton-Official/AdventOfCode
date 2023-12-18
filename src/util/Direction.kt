@@ -12,6 +12,8 @@ enum class Direction {
         East -> West
         West -> East
     }
+
+    fun onAxisOf(other: Direction): Boolean = this == other || this == other.opposite
 }
 
 data class Position(val row: Int, val column: Int) {
