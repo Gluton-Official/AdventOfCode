@@ -12,7 +12,11 @@ fun <T> List2D<T>.getOrNull(row: Int, column: Int): T? = getOrNull(row)?.getOrNu
 fun <T> List2D<T>.getOrNull(position: Position): T? = getOrNull(position.row, position.column)
 
 operator fun <T> List<MutableList<T>>.set(row: Int, column: Int, value: T) { this[row][column] = value }
-operator fun <T> List<MutableList<T>>.set(position: Position, value: T) { this[position.row][position.column] = value }
+operator fun <T> List<MutableList<T>>.set(position: Position, value: T) { this[position.row, position.column] = value }
+fun <T> List<MutableList<T>>.trySet(row: Int, column: Int, value: T): Boolean =
+    getOrNull(row, column)?.also { this[row, column] = value } != null
+fun <T> List<MutableList<T>>.trySet(position: Position, value: T): Boolean =
+    getOrNull(position)?.also { this[position] = value } != null
 
 fun <T, R : Iterable<T>> List<R>.row(index: Int): R = this[index]
 fun <T> Iterable<List<T>>.column(index: Int): List<T> = map { row -> row[index] }

@@ -6,10 +6,18 @@ val Int.rangeExclusive: IntRange get() = IntRange(0, this - 1)
 val Long.rangeInclusive: LongRange get() = LongRange(0, this)
 val Long.rangeExclusive: LongRange get() = LongRange(0, this - 1)
 
-infix fun IntRange.offset(offset: Int) = (start + offset)..(endInclusive + offset)
-infix fun LongRange.offset(offset: Long) = (start + offset)..(endInclusive + offset)
+val IntRange.zeroOffset: Int get() = -first
+
+infix fun IntRange.offset(offset: Int) = (first + offset)..(last + offset)
+infix fun LongRange.offset(offset: Long) = (first + offset)..(last + offset)
 
 infix fun LongRange.constrainWith(predicate: (Long) -> Boolean) = first(predicate)..reversed().first(predicate)
+
+fun IntRange.coerceIn(min: Int, max: Int) = first.coerceAtLeast(min)..last.coerceAtMost(max)
+fun IntRange.coerceIn(range: IntRange) = first.coerceAtLeast(range.first)..last.coerceAtMost(range.last)
+
+fun IntRange.expandToContain(value: Int) = first.coerceAtMost(value)..last.coerceAtLeast(value)
+fun IntRange.expandToContain(range: IntRange) = first.coerceAtMost(range.first)..last.coerceAtLeast(range.last)
 
 val IntRange.lengthInclusive: Int get() = endInclusive - start + 1
 val IntRange.lengthExclusive: Int get() = endInclusive - start
