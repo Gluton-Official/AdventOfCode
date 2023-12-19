@@ -25,6 +25,38 @@ val IntRange.lengthExclusive: Int get() = endInclusive - start
 val LongRange.lengthInclusive: Long get() = endInclusive - start + 1
 val LongRange.lengthExclusive: Long get() = endInclusive - start
 
+infix fun IntRange.within(range: IntRange): Boolean = first in range && last in range
+infix fun IntRange.exclusivelyOverlaps(range: IntRange): Boolean = (first in range) xor (last in range)
+infix fun IntRange.overlaps(range: IntRange): Boolean = first in range || last in range
+
+/**
+ * Compares this IntRange to the specified IntRange.
+ *
+ * The comparison is based on the values of the first and last elements of each range:
+ * - If the last element of this range is less than the first element of the specified range,
+ *   then the result is a negative value.
+ * - If the first element of this range is greater than the last element of the specified range,
+ *   then the result is a positive value.
+ * - Otherwise, the result is zero.
+ *
+ * @param range The IntRange to be compared.
+ * @return A negative integer if this range is less than the specified range,
+ *         a positive integer if this range is greater than the specified range,
+ *         or zero if they are equal.
+ */
+operator fun IntRange.compareTo(range: IntRange): Int = when {
+    last < range.first -> range.first - last
+    first > range.last -> first - range.last
+    else -> 0
+}
+
+fun IntRange.joinWith(range: IntRange): IntRange? = when {
+    this within range -> range
+    range within this -> this
+    this exclusivelyOverlaps range -> expandToContain(range)
+    else -> null
+}
+
 fun <T : ClosedRange<Long>> T.chunked(chunkSize: Long): List<LongRange> = buildList {
     val length = endInclusive - start
     val chunks = length / chunkSize
