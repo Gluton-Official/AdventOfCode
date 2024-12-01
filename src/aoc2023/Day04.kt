@@ -1,10 +1,13 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.offset
 import kotlin.math.pow
 
 object Day04 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(13, """
+        Test(13, """
             Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
             Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
             Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
@@ -20,7 +23,7 @@ object Day04 : AoCPuzzle() {
         }
 
     override val part2Tests = listOf(
-		Test(30, """
+        Test(30, """
             Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
             Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
             Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1

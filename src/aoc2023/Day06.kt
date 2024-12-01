@@ -1,10 +1,13 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.constrainWith
 import util.lengthInclusive
 
 object Day06 : AoCPuzzle() {
     override val part1Tests = listOf(
-	    Test(288L, """
+        Test(288L, """
             Time:      7  15   30
             Distance:  9  40  200
         """.trimIndent()),
@@ -17,7 +20,7 @@ object Day06 : AoCPuzzle() {
     }.reduce { acc, c -> acc * c }
 
     override val part2Tests = listOf(
-		Test(71503L, """
+        Test(71503L, """
             Time:      7  15   30
             Distance:  9  40  200
         """.trimIndent()),

@@ -1,3 +1,6 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.cyclicIterator
 

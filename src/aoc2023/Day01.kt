@@ -1,8 +1,11 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 
 object Day01 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(142, """
+        Test(142, """
             1abc2
             pqr3stu8vwx
             a1b2c3d4e5f
@@ -15,7 +18,7 @@ object Day01 : AoCPuzzle() {
     }
 
     override val part2Tests = listOf(
-		Test(281, """
+        Test(281, """
             two1nine
             eightwothree
             abcone2threexyz

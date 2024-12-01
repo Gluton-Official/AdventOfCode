@@ -1,3 +1,6 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Direction
 import util.Direction.*
 import util.Input
@@ -9,7 +12,7 @@ import util.rangeExclusive
 
 object Day16 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(46, """
+        Test(46, """
             .|...\....
             |.-.\.....
             .....|-...
@@ -26,7 +29,7 @@ object Day16 : AoCPuzzle() {
     override fun part1(input: Input): Int = input.energize(Beam(East, Position(0, 0)))
 
     override val part2Tests = listOf(
-		Test(51, """
+        Test(51, """
             .|...\....
             |.-.\.....
             .....|-...

@@ -1,8 +1,11 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 
 object Day19 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(19114, """
+        Test(19114, """
             px{a<2006:qkq,m>2090:A,rfg}
             pv{a>1716:R,A}
             lnx{m>1548:A,A}
@@ -30,7 +33,7 @@ object Day19 : AoCPuzzle() {
     }
 
     override val part2Tests = listOf(
-		Test(167409079868000L, """
+        Test(167409079868000L, """
             px{a<2006:qkq,m>2090:A,rfg}
             pv{a>1716:R,A}
             lnx{m>1548:A,A}

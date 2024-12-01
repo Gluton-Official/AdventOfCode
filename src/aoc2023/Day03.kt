@@ -1,9 +1,12 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.consumeIndexed
 
 object Day03 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(4361, """
+        Test(4361, """
             467..114..
             ...*......
             ..35..633.
@@ -29,7 +32,7 @@ object Day03 : AoCPuzzle() {
     }
 
     override val part2Tests = listOf(
-		Test(467835, """
+        Test(467835, """
             467..114..
             ...*......
             ..35..633.

@@ -1,10 +1,12 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.zipWithIndexed
-import kotlin.streams.toList
 
 object Day15 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(1320, """
+        Test(1320, """
             rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7
         """.trimIndent()),
 	)
@@ -12,7 +14,7 @@ object Day15 : AoCPuzzle() {
     override fun part1(input: Input): Int = input.first().split(',').sumOf(::hash)
 
     override val part2Tests = listOf(
-		Test(145, """
+        Test(145, """
             rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7
         """.trimIndent()),
 	)

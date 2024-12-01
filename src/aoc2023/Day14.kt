@@ -1,3 +1,6 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.columnStrings
 import util.lengthExclusive
@@ -5,7 +8,7 @@ import util.transposedStrings
 
 object Day14 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(136, """
+        Test(136, """
             O....#....
             O.OO#....#
             .....##...
@@ -22,7 +25,7 @@ object Day14 : AoCPuzzle() {
     override fun part1(input: Input): Int = input.transposedStrings().let(::tilt).let(::calculateLoad)
 
     override val part2Tests = listOf(
-		Test(64, """
+        Test(64, """
             O....#....
             O.OO#....#
             .....##...

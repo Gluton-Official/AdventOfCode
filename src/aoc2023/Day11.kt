@@ -1,10 +1,13 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.uniquePairs
 import kotlin.math.absoluteValue
 
 object Day11 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(374L, """
+        Test(374L, """
             ...#......
             .......#..
             #.........
@@ -22,7 +25,7 @@ object Day11 : AoCPuzzle() {
         .uniquePairs { first.manhattanDistance(second) }.sum()
 
     override val part2Tests = listOf(
-		Test(82000210L, """
+        Test(82000210L, """
             ...#......
             .......#..
             #.........

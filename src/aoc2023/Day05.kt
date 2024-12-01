@@ -1,3 +1,6 @@
+package aoc2023
+
+import AoCPuzzle
 import util.Input
 import util.consumeTo
 import util.mapParallel
@@ -6,7 +9,7 @@ import util.split
 
 object Day05 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(35L, """
+        Test(35L, """
             seeds: 79 14 55 13
 
             seed-to-soil map:
@@ -50,7 +53,7 @@ object Day05 : AoCPuzzle() {
     }
 
     override val part2Tests = listOf(
-		Test(46L, """
+        Test(46L, """
             seeds: 79 14 55 13
 
             seed-to-soil map:
