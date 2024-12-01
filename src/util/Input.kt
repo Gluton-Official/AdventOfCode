@@ -36,12 +36,12 @@ fun downloadInput(
     val text: String = runBlocking {
         HttpClient {
             expectSuccess = true
-        }.get("https://adventofcode.com/$year/day/$day/input") {
+        }.get("https://adventofcode.com/$year/day/$day/input".also { println("Downloading $it...") }) {
             cookie("session", dotenv["session"])
         }.body()
     }
 
-    File("resources/Day${"%02d".format(day)}.txt").writeText(text)
+    File("resources/Year$year/Day${"%02d".format(day)}.txt".also { println("Downloaded to $it") }).writeText(text)
 }
 
 fun readInput(name: String): Input = Path("resources/$name.txt").readLines()
