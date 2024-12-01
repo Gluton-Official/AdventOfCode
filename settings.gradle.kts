@@ -1,4 +1,4 @@
-rootProject.name = "Kotlin-AoC-2023"
+rootProject.name = "AdventOfCode"
 
 dependencyResolutionManagement {
     repositories {

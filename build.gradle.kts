@@ -5,6 +5,10 @@ plugins {
     kotlin("jvm") version "2.1.0"
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-script-runtime")
     implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.1")
@@ -18,20 +22,26 @@ dependencies {
 }
 
 kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = KotlinVersion.KOTLIN_2_2.version
-            apiVersion = KotlinVersion.KOTLIN_2_2.version
+    sourceSets {
+        main {
+            kotlin.srcDir("src")
+            resources.srcDir("resources")
+        }
+        all {
+            languageSettings {
+                languageVersion = KotlinVersion.KOTLIN_2_2.version
+                apiVersion = KotlinVersion.KOTLIN_2_2.version
 
-            enableLanguageFeature(LanguageFeature.WhenGuards.name)
-            enableLanguageFeature(LanguageFeature.MultiDollarInterpolation.name)
-            enableLanguageFeature(LanguageFeature.BreakContinueInInlineLambdas.name)
+                enableLanguageFeature(LanguageFeature.WhenGuards.name)
+                enableLanguageFeature(LanguageFeature.MultiDollarInterpolation.name)
+                enableLanguageFeature(LanguageFeature.BreakContinueInInlineLambdas.name)
+            }
         }
     }
 }
 
 tasks {
     wrapper {
-        gradleVersion = "8.5"
+        gradleVersion = "8.11.1"
     }
 }

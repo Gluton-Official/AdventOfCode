@@ -1,5 +1,5 @@
 .gradle
 .idea
 build
-resources/Day*.txt
+resources/**
 .env
