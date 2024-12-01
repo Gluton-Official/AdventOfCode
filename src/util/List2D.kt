@@ -33,8 +33,9 @@ fun <T> Iterable<MutableList<T>>.addColumn(value: Iterable<T>): List<Boolean> =
     }
 
 fun <T> List2D<T>.rows(): List2D<T> = this
-fun <T> Collection<List<T>>.columns(): List2D<T> =
-    indices.map { columnIndex -> map { row -> row[columnIndex] } }
+fun <T> Collection<List<T>>.columns(): List2D<T> = List(firstOrNull()?.size ?: 0) { column ->
+    map { row -> row[column] }
+}
 
 fun Collection<CharSequence>.columnStrings(): List<String> =
     first().indices.map { columnIndex ->
