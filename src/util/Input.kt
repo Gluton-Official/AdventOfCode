@@ -2,6 +2,9 @@
 
 package util
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.terminal.Terminal
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -23,6 +26,7 @@ private val dotenv = dotenv()
 fun downloadInput(
     day: Int? = null,
     year: Int? = null,
+    terminal: Terminal? = null,
 ) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val day = day ?: today.dayOfMonth
@@ -36,12 +40,16 @@ fun downloadInput(
     val text: String = runBlocking {
         HttpClient {
             expectSuccess = true
-        }.get("https://adventofcode.com/$year/day/$day/input".also { println("Downloading $it...") }) {
+        }.get("https://adventofcode.com/$year/day/$day/input".also {
+            val msg = "Downloading $it..."
+            terminal?.println(gray(msg)) ?: println(msg)
+        }) {
             cookie("session", dotenv["session"])
         }.body()
     }
 
-    File("resources/Year$year/Day${"%02d".format(day)}.txt".also { println("Downloaded to $it") }).writeText(text)
+    File("resources/Year$year/Day${"%02d".format(day)}.txt".also {
+        val msg = "Downloaded $it..."
+        terminal?.println(gray(msg)) ?: println(msg)
+    }).writeText(text)
 }
-
-fun readInput(name: String): Input = Path("resources/$name.txt").readLines()

@@ -16,16 +16,21 @@ import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Padding
 import util.Input
 import util.downloadInput
-import util.readInput
-import java.io.File
+import kotlin.io.path.Path
+import kotlin.io.path.notExists
+import kotlin.io.path.readLines
 import kotlin.time.measureTimedValue
 
 abstract class AoCPuzzle {
+    private val terminal = Terminal()
+
     private val name = this::class.simpleName!!
     private val day = name.substringAfter("Day").toInt()
+    private val year = this::class.qualifiedName!!.split('.').dropLast(1).last().substringAfter("aoc").toInt()
     private val input: Input by lazy {
-        if (!File("resources/$name.txt").exists()) downloadInput(day)
-        readInput(name)
+        val inputPath = Path("resources/Year$year/$name.txt")
+        if (inputPath.notExists()) downloadInput(day, year, terminal)
+        inputPath.readLines()
     }
 
     protected open val part1Tests = listOf(Test())
@@ -48,8 +53,6 @@ abstract class AoCPuzzle {
     class Test(val expected: Number = 0, val input: String = "") {
         val inputLines = input.lines()
     }
-
-    private val terminal = Terminal()
 
     private fun <T> render(name: String, action: (Input) -> T): T = terminal.run {
         println(HorizontalRule(cyan(name), ruleCharacter = "═", ruleStyle = TextStyle(cyan)))
