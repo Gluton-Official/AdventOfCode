@@ -18,17 +18,9 @@ object Day01 : AoCPuzzle() {
 	)
 
     override fun part1(input: Input): Int {
-        val groups = input.map {
+        val (left, right) = input.map {
             it.split(Regex("\\s+")).map(String::toInt)
-        }
-        val left = mutableListOf<Int>()
-        val right = mutableListOf<Int>()
-        groups.forEach { (a, b) ->
-            left += a
-            right += b
-        }
-        left.sort()
-        right.sort()
+        }.transposed().map { it.sorted() }
         return left.zip(right).sumOf { (a, b) -> (a - b).absoluteValue }
     }
 
@@ -44,15 +36,9 @@ object Day01 : AoCPuzzle() {
 	)
 
     override fun part2(input: Input): Int {
-        val groups = input.map {
+        val (left, right) = input.map {
             it.split(Regex("\\s+")).map(String::toInt)
-        }
-        val left = mutableListOf<Int>()
-        val right = mutableListOf<Int>()
-        groups.forEach { (a, b) ->
-            left += a
-            right += b
-        }
+        }.transposed()
         val map = right.associateWith { target ->
             right.count { it == target }
         }
