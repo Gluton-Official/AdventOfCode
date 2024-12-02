@@ -15,6 +15,8 @@ fun <T> List<T>.asCyclicSequence(): Sequence<T> {
     }
 }
 
+fun <T> List<T>.toPair(): Pair<T, T> = zipWithNext().single()
+
 fun <T : CharSequence> T.consume(action: (T, Char) -> T) {
     var remains = this
     while (remains.any()) {
