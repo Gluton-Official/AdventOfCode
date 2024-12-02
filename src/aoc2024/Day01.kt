@@ -2,6 +2,7 @@ package aoc2024
 
 import AoCPuzzle
 import util.Input
+import util.toPair
 import util.transposed
 import kotlin.math.absoluteValue
 
@@ -19,9 +20,9 @@ object Day01 : AoCPuzzle() {
 
     override fun part1(input: Input): Int {
         val (left, right) = input.map {
-            it.split(Regex("\\s+")).map(String::toInt)
-        }.transposed().map { it.sorted() }
-        return left.zip(right).sumOf { (a, b) -> (a - b).absoluteValue }
+            it.split(Regex("\\s+")).map(String::toInt).zipWithNext().single()
+        }.unzip()
+        return left.sorted().zip(right.sorted()).sumOf { (a, b) -> (a - b).absoluteValue }
     }
 
     override val part2Tests = listOf(
@@ -37,12 +38,10 @@ object Day01 : AoCPuzzle() {
 
     override fun part2(input: Input): Int {
         val (left, right) = input.map {
-            it.split(Regex("\\s+")).map(String::toInt)
-        }.transposed()
-        val map = right.associateWith { target ->
-            right.count { it == target }
-        }
-        return left.sumOf { a -> map.getOrDefault(a, 0) * a }
+            it.split(Regex("\\s+")).map(String::toInt).toPair()
+        }.unzip()
+        val map = right.groupingBy { it }.eachCount()
+        return left.sumOf { map.getOrDefault(it, 0) * it }
     }
 
     @JvmStatic
