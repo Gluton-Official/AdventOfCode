@@ -3,7 +3,6 @@ package aoc2024
 import AoCPuzzle
 import util.Input
 import util.toPair
-import util.transposed
 import kotlin.math.absoluteValue
 
 object Day01 : AoCPuzzle() {
