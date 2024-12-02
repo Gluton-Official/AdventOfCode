@@ -17,7 +17,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import java.io.File
 import kotlin.io.path.Path
-import kotlin.io.path.readLines
+import kotlin.io.path.createParentDirectories
+import kotlin.io.path.pathString
+import kotlin.io.path.writeText
 
 typealias Input = List<String>
 
@@ -47,9 +49,10 @@ fun downloadInput(
             cookie("session", dotenv["session"])
         }.body()
     }
-
-    File("resources/Year$year/Day${"%02d".format(day)}.txt".also {
-        val msg = "Downloaded $it..."
+    Path("resources/aoc$year/Day${"%02d".format(day)}.txt").apply {
+        createParentDirectories()
+        writeText(text)
+        val msg = "Downloaded to ${this.pathString}"
         terminal?.println(gray(msg)) ?: println(msg)
-    }).writeText(text)
+    }
 }
