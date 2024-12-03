@@ -27,7 +27,7 @@ abstract class AoCPuzzle {
     private val name = this::class.simpleName!!
     private val day = name.substringAfter("Day").toInt()
     private val year = this::class.qualifiedName!!.split('.').dropLast(1).last().substringAfter("aoc").toInt()
-    private val input: Input by lazy {
+    private val input: Input = run {
         val inputPath = Path("resources/aoc$year/$name.txt")
         if (inputPath.notExists()) downloadInput(day, year, terminal)
         inputPath.readLines()
