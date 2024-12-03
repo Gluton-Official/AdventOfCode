@@ -12,11 +12,11 @@ object Day03 : AoCPuzzle() {
 
 
     override fun part1(input: Input): Int {
-        val mul = """mul\((\d{1,3}),(\d{1,3})\)""".toRegex()
+        val regex = """mul\((\d{1,3}),(\d{1,3})\)""".toRegex()
         return input.sumOf {
-            mul.findAll(it).map {
-                it.groupValues.drop(1).let { (a, b) -> a.toInt() * b.toInt() }
-            }.sum()
+            regex.findAll(it).sumOf {
+                it.destructured.let { (a, b) -> a.toInt() * b.toInt() }
+            }
         }
     }
 
@@ -27,28 +27,17 @@ object Day03 : AoCPuzzle() {
 	)
 
     override fun part2(input: Input): Int {
-        val mul = """mul\((\d{1,3}),(\d{1,3})\)""".toRegex()
-        val enable = """do\(\)""".toRegex()
-        val disable = """don't\(\)""".toRegex()
+        val regex = """mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)""".toRegex()
         var enabled = true
         return input.sumOf {
-            var sum = 0
-            var pos = 0
-            while (pos < it.length) {
-                val next = listOf(
-                    enable.find(it, pos),
-                    disable.find(it, pos),
-                    mul.find(it, pos)
-                ).minBy { it?.range?.first ?: Int.MAX_VALUE } ?: break
-
-                when {
-                    next.value.startsWith("don't") -> enabled = false
-                    next.value.startsWith("do") -> enabled = true
-                    enabled -> sum += next.groupValues.drop(1).let { (a, b) -> a.toInt() * b.toInt() }
+            regex.findAll(it).sumOf { match ->
+                when (match.value) {
+                    "do()" -> enabled = true
+                    "don't()" -> enabled = false
+                    else if enabled -> return@sumOf match.destructured.let { (a, b) -> a.toInt() * b.toInt() }
                 }
-                pos = next.range.last
+                0
             }
-            sum
         }
     }
 
