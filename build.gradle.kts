@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-script-runtime")
     implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
