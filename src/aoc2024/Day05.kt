@@ -48,13 +48,13 @@ object Day05 : AoCPuzzle() {
         val updates = input.takeLastWhile(String::isNotBlank).map { it.split(',').map(String::toInt) }
 
         return updates.filter { update ->
-            update.withIndex().reversed().all { (index, page) ->
-                update.take(index).none { otherPage ->
-                    otherPage in (rules[page] ?: return@none false)
+            update.withIndex().all { (index, page) ->
+                update.subList(0, index).all { otherPage ->
+                    otherPage !in rules[page].orEmpty()
                 }
             }
         }.sumOf {
-            it[it.indices.last / 2]
+            it[it.lastIndex / 2]
         }
     }
 
@@ -99,24 +99,21 @@ object Day05 : AoCPuzzle() {
         val updates = input.takeLastWhile(String::isNotBlank).map { it.split(',').map(String::toInt) }
 
         return updates.filterNot { update ->
-            update.withIndex().reversed().all { (index, page) ->
-                update.take(index).none { otherPage ->
-                    otherPage in (rules[page] ?: return@none false)
+            update.withIndex().all { (index, page) ->
+                update.subList(0, index).all { otherPage ->
+                    otherPage !in rules[page].orEmpty()
                 }
             }
-        }.map { it.toMutableList() }.onEach { update ->
-            for (i in update.lastIndex downTo 1) {
-                for (j in (i - 1) downTo 0) {
-                    val page = update[i]
-                    val otherPage = update[j]
-                    if (otherPage in rules[page].orEmpty()) {
-                        update[j] = page
-                        update[i] = otherPage
-                    }
+        }.map {
+            it.sortedWith { a, b ->
+                when {
+                    a in rules[b].orEmpty() -> 1
+                    b in rules[a].orEmpty() -> -1
+                    else -> 0
                 }
             }
         }.sumOf {
-            it[it.indices.last / 2]
+            it[it.lastIndex / 2]
         }
     }
 
