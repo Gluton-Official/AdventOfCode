@@ -2,7 +2,6 @@ package aoc2024
 
 import AoCPuzzle
 import util.Input
-import util.prettyToString2D
 
 object Day04 : AoCPuzzle() {
     override val part1Tests = listOf(
@@ -25,15 +24,16 @@ object Day04 : AoCPuzzle() {
     override fun part1(input: Input): Int {
         var count = 0
         val mas = "MAS".toList()
-        val up = 0 to -1
-        val down = 0 to 1
-        val left = -1 to 0
-        val right = 1 to 0
-        val upRight = 1 to -1
-        val downRight = 1 to 1
-        val upLeft = -1 to -1
-        val downLeft = -1 to 1
-        val dirs = listOf(up, down, left, right, upRight, downRight, upLeft, downLeft)
+        val dirs = listOf(
+            0 to -1,
+            0 to 1,
+            -1 to 0,
+            1 to 0,
+            1 to -1,
+            1 to 1,
+            -1 to -1,
+            -1 to 1,
+        )
         input.forEachIndexed { curY, row ->
             row.forEachIndexed { curX, c ->
                 if (c == 'X') {
@@ -41,8 +41,8 @@ object Day04 : AoCPuzzle() {
                         val coords = List(3) { i ->
                             (curX + x * (i + 1)) to (curY + y * (i + 1))
                         }
-                        val xmasPos = coords.zip(mas)
-                        if (xmasPos.all { (pos, c) ->
+                        val masPos = coords.zip(mas)
+                        if (masPos.all { (pos, c) ->
                             val (x, y) = pos
                             input.getOrNull(y)?.getOrNull(x) == c
                         }) {
