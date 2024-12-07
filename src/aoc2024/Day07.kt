@@ -57,14 +57,12 @@ object Day07 : AoCPuzzle() {
 
     override fun part2(input: Input): Long {
         val equations = input.map(Equation::from)
-        fun testSubList(target: Long, runningTotal: Long, numbers: List<Long>): Boolean {
-            if (numbers.isEmpty()) return target == runningTotal
-            return when {
-                testSubList(target, runningTotal + numbers.first(), numbers.drop(1)) -> true
-                testSubList(target, runningTotal * numbers.first(), numbers.drop(1)) -> true
-                testSubList(target, (runningTotal.toString() + numbers.first().toString()).toLong(), numbers.drop(1)) -> true
-                else -> false
-            }
+        fun testSubList(target: Long, runningTotal: Long, numbers: List<Long>): Boolean = when {
+            numbers.isEmpty() -> target == runningTotal
+            testSubList(target, runningTotal + numbers.first(), numbers.drop(1)) -> true
+            testSubList(target, runningTotal * numbers.first(), numbers.drop(1)) -> true
+            testSubList(target, (runningTotal.toString() + numbers.first().toString()).toLong(), numbers.drop(1)) -> true
+            else -> false
         }
         return equations.filter { (testResult, numbers) ->
             testSubList(testResult, 0, numbers)
