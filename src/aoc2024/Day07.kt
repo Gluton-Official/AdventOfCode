@@ -61,7 +61,7 @@ object Day07 : AoCPuzzle() {
             numbers.isEmpty() -> target == runningTotal
             testSubList(target, runningTotal + numbers.first(), numbers.drop(1)) -> true
             testSubList(target, runningTotal * numbers.first(), numbers.drop(1)) -> true
-            testSubList(target, (runningTotal.toString() + numbers.first().toString()).toLong(), numbers.drop(1)) -> true
+            testSubList(target, "$runningTotal${numbers.first()}".toLong(), numbers.drop(1)) -> true
             else -> false
         }
         return equations.filter { (testResult, numbers) ->
