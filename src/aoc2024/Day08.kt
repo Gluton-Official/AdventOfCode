@@ -4,6 +4,7 @@ import AoCPuzzle
 import util.Input
 import util.Position
 import util.rangeInclusive
+import util.setAllAs
 import kotlin.collections.flatMap
 
 typealias Frequency = Char
@@ -116,20 +117,11 @@ object Day08 : AoCPuzzle() {
                 }
             }
         }
-        val map = List(antennaMap.height) {
-            MutableList(antennaMap.width) { '.' }
-        }
-        antiNodes.forEach { position ->
-            map[position.row][position.column] = '#'
-        }
-        antennaMap.forEach { (frequency, positions) ->
-            positions.forEach { position ->
-                map[position.row][position.column] = frequency
-            }
-        }
-        map.forEach {
-            println(it.joinToString(""))
-        }
+        List(antennaMap.height) { MutableList(antennaMap.width) { '.' } }
+            .setAllAs(antiNodes, '#')
+            .setAllAs(antennaMap.flatMap { (frequency, positions) -> positions.map { it to frequency } })
+            .joinToString("\n") { it.joinToString("") }
+            .println()
         return antiNodes.count()
     }
 

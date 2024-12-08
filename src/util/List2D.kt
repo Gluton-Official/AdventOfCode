@@ -85,6 +85,10 @@ fun <R> Iterable<CharSequence>.mapStrings2D(transform: (Char) -> R): List2D<R> =
 fun <T, R> Iterable2D<T>.map2DIndexed(transform: Position.(T) -> R): List2D<R> = mapIndexed { rowIndex, row ->
     row.mapIndexed { columnIndex, element -> Position(rowIndex, columnIndex).transform(element) }
 }
+fun <R> Iterable<CharSequence>.mapStrings2DIndexed(transform: (Position, Char) -> R): List2D<R> =
+    mapIndexed { rowIndex, row ->
+        row.mapIndexed { columnIndex, char -> transform(Position(rowIndex, columnIndex), char) }
+    }
 
 fun <T, R> Iterable<T>.zip2D(vertical: Iterable<R>): List2D<Pair<T, R>> =
     vertical.map { rowElement -> map { it to rowElement } }
@@ -103,4 +107,11 @@ fun <T> Iterable2D<T>.prettyToString2D(): String = buildString {
         append(row)
     }
     append(']')
+}
+
+fun <C : List<MutableList<T>>, T> C.setAllAs(positions: Iterable<Position>, value: T) = apply {
+    positions.forEach { (row, column) -> this[row][column] = value }
+}
+fun <C : List<MutableList<T>>, T> C.setAllAs(positions: Iterable<Pair<Position, T>>) = apply {
+    positions.forEach { (position, value) -> this[position.row][position.column] = value }
 }
