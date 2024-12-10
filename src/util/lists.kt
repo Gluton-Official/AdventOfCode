@@ -6,6 +6,18 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 
+fun <T> Iterable<T>.indexOfFirstNull(): Int = indexOfFirst { it == null }
+fun <T> List<T>.indexOfFirstNull(): Int = indexOfFirst { it == null }
+
+fun <T> Iterable<T>.indexOfLastNull(): Int = indexOfLast { it == null }
+fun <T> List<T>.indexOfLastNull(): Int = indexOfLast { it == null }
+
+fun <T> Iterable<T>.indexOfFirstNotNull(): Int = indexOfFirst { it != null }
+fun <T> List<T>.indexOfFirstNotNull(): Int = indexOfFirst { it != null }
+
+fun <T> Iterable<T>.indexOfLastNotNull(): Int = indexOfLast { it != null }
+fun <T> List<T>.indexOfLastNotNull(): Int = indexOfLast { it != null }
+
 fun <T> List<T>.cyclicIterator(): Iterator<T> = asCyclicSequence().iterator()
 fun <T> List<T>.asCyclicSequence(): Sequence<T> {
     var index = 0
