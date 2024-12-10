@@ -55,6 +55,15 @@ fun <T : List<R>, R> T.consumeIndexed(action: (Int, T, R) -> T) {
     }
 }
 
+fun <T : List<R>, R, C> T.consumeIndexedTo(destination: C, action: C.(Int, T, R) -> T): C {
+    val initialLength = size
+    var remains = this
+    while (remains.any()) {
+        remains = destination.action(initialLength - remains.size, remains, remains.first())
+    }
+    return destination
+}
+
 fun <T, R> Iterable<T>.zipWith(other: R): List<Pair<T, R>> = map { it to other }
 fun <T, R, V> Iterable<T>.zipWith(other: R, transform: (Pair<T, R>) -> V): List<V> = map { transform(it to other) }
 fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) -> V): List<V> =
