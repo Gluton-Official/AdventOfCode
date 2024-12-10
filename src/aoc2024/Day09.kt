@@ -74,16 +74,15 @@ object Day09 : AoCPuzzle() {
     }
 
     private fun buildBlockMap(diskMap: List<Int>): List<String> = diskMap.flatMapIndexed { index, digit ->
-        if (index % 2 == 0) {
-            List(digit) { (index / 2).toString() }
-        } else {
-            List(digit) { "." }
-        }
+        val fileId = if (index % 2 == 0) (index / 2).toString() else "."
+        List(digit) { fileId }
     }
 
     private fun computeChecksum(blockMap: List<String>): Long = blockMap.foldIndexed(0L) { block, sum, id ->
-        if (id == ".") sum
-        else sum + block.toLong() * id.toLong()
+        when (id) {
+            "." -> sum
+            else -> sum + block * id.toLong()
+        }
     }
 
     @JvmStatic
