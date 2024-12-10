@@ -2,6 +2,8 @@ package aoc2024
 
 import AoCPuzzle
 import util.Input
+import util.indexOfFirstNull
+import util.indexOfLastNotNull
 
 object Day09 : AoCPuzzle() {
     override val part1Tests = listOf(
@@ -13,18 +15,17 @@ object Day09 : AoCPuzzle() {
     override fun part1(input: Input): Long {
         val diskMap = input.single().map(Char::digitToInt)
         val blockMap = buildBlockMap(diskMap).toMutableList()
-        var lastFileSegmentIndex = blockMap.indexOfLast { it != "." }
+        var lastFileSegmentIndex = blockMap.indexOfLastNotNull()
         for ((block, fileId) in blockMap.withIndex()) {
-            if (fileId != ".") continue
+            if (fileId != null) continue
 
-            val endBlock = lastFileSegmentIndex
-            if (block > endBlock) break
+            if (block > lastFileSegmentIndex) break
 
-            val endFileId = blockMap[endBlock]
-            blockMap[endBlock] = "."
-            blockMap[block] = endFileId
+            val lastFileSegmentId = blockMap[lastFileSegmentIndex]
+            blockMap[lastFileSegmentIndex] = null
+            blockMap[block] = lastFileSegmentId
 
-            while (blockMap[lastFileSegmentIndex] == ".") {
+            while (blockMap[lastFileSegmentIndex] == null) {
                 lastFileSegmentIndex--
             }
         }
@@ -41,48 +42,42 @@ object Day09 : AoCPuzzle() {
         val diskMap = input.single().map(Char::digitToInt)
         var blockMap = buildBlockMap(diskMap).toMutableList()
         var blockMapIndex = blockMap.lastIndex
-        var firstEmptyBlockIndex = blockMap.indexOfFirst { it == "." }
+        var firstEmptyBlockIndex = blockMap.indexOfFirst { it == null }
         while (firstEmptyBlockIndex < blockMapIndex) {
-            when (val block = blockMap[blockMapIndex]) {
-                "." -> blockMapIndex--
-                else -> {
-                    val file = blockMap.subList(0, blockMapIndex + 1).takeLastWhile { it == block }
-                    var blockIndex = firstEmptyBlockIndex
-                    var emptyBlockSize = 1
-                    while (file.size > emptyBlockSize && blockIndex < blockMapIndex) {
-                        when (blockMap[++blockIndex]) {
-                            "." -> emptyBlockSize++
-                            else -> emptyBlockSize = 0
-                        }
+            blockMap[blockMapIndex]?.let { block ->
+                val file = blockMap.subList(0, blockMapIndex + 1).takeLastWhile { it == block }
+                var blockIndex = firstEmptyBlockIndex
+                var emptyBlockSize = 1
+                while (file.size > emptyBlockSize && blockIndex < blockMapIndex) {
+                    when (blockMap[++blockIndex]) {
+                        null -> emptyBlockSize++
+                        else -> emptyBlockSize = 0
                     }
-                    if (emptyBlockSize >= file.size) {
-                        val emptyBlockIndex = blockIndex - (emptyBlockSize - 1)
-                        val fileId = file.first()
-                        repeat(file.size) {
-                            blockMap[emptyBlockIndex + it] = fileId
-                            blockMap[blockMapIndex - it] = "."
-                        }
-                        if (emptyBlockIndex == firstEmptyBlockIndex) {
-                            firstEmptyBlockIndex = blockMap.indexOfFirst { it == "." }
-                        }
-                    }
-                    blockMapIndex -= file.size
                 }
-            }
+                if (emptyBlockSize >= file.size) {
+                    val emptyBlockIndex = blockIndex - (emptyBlockSize - 1)
+                    val fileId = file.first()
+                    repeat(file.size) {
+                        blockMap[emptyBlockIndex + it] = fileId
+                        blockMap[blockMapIndex - it] = null
+                    }
+                    if (emptyBlockIndex == firstEmptyBlockIndex) {
+                        firstEmptyBlockIndex = blockMap.indexOfFirstNull()
+                    }
+                }
+                blockMapIndex -= file.size
+            } ?: blockMapIndex--
         }
         return computeChecksum(blockMap)
     }
 
-    private fun buildBlockMap(diskMap: List<Int>): List<String> = diskMap.flatMapIndexed { index, digit ->
-        val fileId = if (index % 2 == 0) (index / 2).toString() else "."
+    private fun buildBlockMap(diskMap: List<Int>): List<Int?> = diskMap.flatMapIndexed { index, digit ->
+        val fileId = if (index % 2 == 0) index / 2 else null
         List(digit) { fileId }
     }
 
-    private fun computeChecksum(blockMap: List<String>): Long = blockMap.foldIndexed(0L) { block, sum, id ->
-        when (id) {
-            "." -> sum
-            else -> sum + block * id.toLong()
-        }
+    private fun computeChecksum(blockMap: List<Int?>): Long = blockMap.foldIndexed(0L) { block, sum, id ->
+        id?.let { id -> sum + block * id } ?: sum
     }
 
     @JvmStatic
