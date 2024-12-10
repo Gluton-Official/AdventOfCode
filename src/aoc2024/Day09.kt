@@ -67,48 +67,6 @@ object Day09 : AoCPuzzle() {
         return computeChecksum(blockMap)
     }
 
-//    override fun part2(input: Input): Long {
-//        val diskMap = input.single().map(Char::digitToInt)
-//        var blockMap = buildBlockMap(diskMap).toMutableList()
-//        val emptyBlocksList = (blockMap as List<String>).consumeIndexedTo(mutableListOf<Pair<Int, Int>>()) { index, blockMap, block ->
-//            when (block) {
-//                "." -> {
-//                    val emptyBlocks = blockMap.takeWhile { it == "." }.count()
-//                    add(index to emptyBlocks)
-//                    blockMap.drop(emptyBlocks)
-//                }
-//                else -> blockMap.dropWhile { it != "." }
-//            }
-//        }
-//        var blockMapPosition = blockMap.lastIndex
-//        while (emptyBlocksList.isNotEmpty() && emptyBlocksList.first().first < blockMapPosition) {
-//            when (val block = blockMap[blockMapPosition]) {
-//                "." -> blockMapPosition--
-//                else -> {
-//                    val file = blockMap.subList(0, blockMapPosition + 1).takeLastWhile { it == block }
-//                    val emptyBlockListIndex = emptyBlocksList.indexOfFirst { file.size <= it.second }
-//                    if (emptyBlockListIndex != -1) {
-//                        val emptyBlock = emptyBlocksList[emptyBlockListIndex]
-//                        val emptyBlockIndex = emptyBlock.first
-//                        val fileId = file.first()
-//                        repeat (file.size) {
-//                            blockMap[emptyBlockIndex + it] = fileId
-//                            blockMap[blockMapPosition - it] = "."
-//                        }
-//                        if (emptyBlock.second == file.size) {
-//                            emptyBlocksList.removeAt(emptyBlockListIndex)
-//                        } else {
-//                            emptyBlocksList[emptyBlockListIndex] = (emptyBlock.first + file.size) to (emptyBlock.second - file.size)
-//                        }
-//                    }
-//                    blockMapPosition -= file.size
-//                }
-//            }
-//        }
-//        kotlin.io.println(blockMap)
-//        return computeChecksum(blockMap)
-//    }
-
     private fun buildBlockMap(diskMap: List<Int>): List<String> = diskMap.flatMapIndexed { index, digit ->
         if (index % 2 == 0) {
             List(digit) { (index / 2).toString() }
