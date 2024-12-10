@@ -13,14 +13,20 @@ object Day09 : AoCPuzzle() {
     override fun part1(input: Input): Long {
         val diskMap = input.single().map(Char::digitToInt)
         val blockMap = buildBlockMap(diskMap).toMutableList()
+        var lastFileSegmentIndex = blockMap.indexOfLast { it != "." }
         for ((block, fileId) in blockMap.withIndex()) {
             if (fileId != ".") continue
 
-            val endBlock = blockMap.indexOfLast { it != "." }
+            val endBlock = lastFileSegmentIndex
             if (block > endBlock) break
+
             val endFileId = blockMap[endBlock]
             blockMap[endBlock] = "."
             blockMap[block] = endFileId
+
+            while (blockMap[lastFileSegmentIndex] == ".") {
+                lastFileSegmentIndex--
+            }
         }
         return computeChecksum(blockMap)
     }
