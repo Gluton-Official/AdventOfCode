@@ -1,6 +1,7 @@
 package aoc2024
 
 import AoCPuzzle
+import jdk.internal.vm.vector.VectorSupport.test
 import util.Input
 import kotlin.div
 import kotlin.math.floor
@@ -10,10 +11,12 @@ import kotlin.rem
 
 object Day11 : AoCPuzzle() {
     override val part1Tests = listOf(
-		Test(55312L, """
+        Test(
+            55312L, """
             125 17
-        """.trimIndent()),
-	)
+        """.trimIndent()
+        ),
+    )
 
     override fun part1(input: Input): Long {
         var stones = input.single().split(" ").map(String::toLong)
@@ -38,10 +41,12 @@ object Day11 : AoCPuzzle() {
     }
 
     override val part2Tests = listOf(
-		Test(65601038650482L, """
+        Test(
+            65601038650482L, """
             125 17
-        """.trimIndent()),
-	)
+        """.trimIndent()
+        ),
+    )
 
     override fun part2(input: Input): Long {
         var stones = input.single().split(" ").map(String::toLong)
@@ -64,17 +69,12 @@ object Day11 : AoCPuzzle() {
         return stones
     }
 
-    private fun blinkStone(engravedValue: Long): List<Long> = when (engravedValue) {
-        0L -> listOf(1)
-        else -> {
-            val digits = (log10(engravedValue.toDouble()) + 1).toInt()
-            when (digits % 2) {
-                0 -> {
-                    val pivot = 10f.pow(digits / 2).toInt()
-                    listOf(engravedValue / pivot, engravedValue % pivot)
-                }
-                else -> listOf(engravedValue * 2024)
-            }
+    private fun blinkStone(engravedValue: Long): List<Long> {
+        if (engravedValue == 0L) return listOf(1)
+        val digits = (log10(engravedValue.toDouble()) + 1).toInt()
+        return when (digits % 2) {
+            0 -> 10f.pow(digits / 2).toInt().let { listOf(engravedValue / it, engravedValue % it) }
+            else -> listOf(engravedValue * 2024)
         }
     }
 
