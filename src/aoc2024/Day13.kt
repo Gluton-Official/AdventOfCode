@@ -39,7 +39,7 @@ object Day13 : AoCPuzzle() {
             val (buttonAX, buttonAY) = machine.buttonADistance.let { (x, y) -> x.toFloat() to y.toFloat() }
             val (buttonBX, buttonBY) = machine.buttonBDistance.let { (x, y) -> x.toFloat() to y.toFloat() }
             val buttonAPresses = (prizeY - buttonBY * prizeX / buttonBX) /  (buttonAY - buttonBY * buttonAX / buttonBX)
-            val buttonBPresses = prizeX / buttonBX - (buttonAX / buttonBX) * (prizeY - buttonBY * prizeX / buttonBX) / (buttonAY - buttonBY * buttonAX / buttonBX)
+            val buttonBPresses = prizeX / buttonBX - (buttonAX / buttonBX) * buttonAPresses
             if ((buttonAPresses - buttonAPresses.roundToInt()).absoluteValue <= EPSILON && (buttonBPresses - buttonBPresses.roundToInt()) <= EPSILON) {
                 buttonAPresses.roundToInt() * Machine.BUTTON_A_TOKENS + buttonBPresses.roundToInt() * Machine.BUTTON_B_TOKENS
             } else null
@@ -73,7 +73,7 @@ object Day13 : AoCPuzzle() {
             val (buttonAX, buttonAY) = machine.buttonADistance.let { (x, y) -> x.toDouble() to y.toDouble() }
             val (buttonBX, buttonBY) = machine.buttonBDistance.let { (x, y) -> x.toDouble() to y.toDouble() }
             val buttonAPresses = (prizeY - buttonBY * prizeX / buttonBX) /  (buttonAY - buttonBY * buttonAX / buttonBX)
-            val buttonBPresses = prizeX / buttonBX - (buttonAX / buttonBX) * (prizeY - buttonBY * prizeX / buttonBX) / (buttonAY - buttonBY * buttonAX / buttonBX)
+            val buttonBPresses = prizeX / buttonBX - (buttonAX / buttonBX) * buttonAPresses
             if ((buttonAPresses - buttonAPresses.roundToLong()).absoluteValue <= EPSILON && (buttonBPresses - buttonBPresses.roundToLong()) <= EPSILON) {
                 buttonAPresses.roundToLong() * Machine.BUTTON_A_TOKENS + buttonBPresses.roundToLong() * Machine.BUTTON_B_TOKENS
             } else null
