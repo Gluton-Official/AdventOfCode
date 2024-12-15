@@ -16,6 +16,7 @@ import util.set
 import util.setAllAs
 import util.times
 import kotlin.math.log
+import kotlin.math.log2
 
 object Day14 : AoCPuzzle() {
     override val part1Tests = listOf(
@@ -122,7 +123,7 @@ object Day14 : AoCPuzzle() {
                 val robotMap = finalRobotPositions.groupingBy { it }.eachCount()
 
                 val entropy = robotMap.values.fold(0f) { acc, robots ->
-                    acc + robots * log(robots.toFloat(), 2f)
+                    acc + robots * log2(robots.toFloat())
                 }
 
 //                if (entropy < minEntropy.first) {
