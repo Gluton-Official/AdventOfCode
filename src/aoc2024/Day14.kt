@@ -4,18 +4,13 @@ import AoCPuzzle
 import util.Input
 import util.Position
 import util.Vector2
-import util.compareTo
 import util.div
 import util.get
-import util.minus
 import util.mod
 import util.plus
 import util.prettyToString2D
-import util.rem
 import util.set
-import util.setAllAs
 import util.times
-import kotlin.math.log
 import kotlin.math.log2
 
 object Day14 : AoCPuzzle() {
@@ -72,18 +67,7 @@ object Day14 : AoCPuzzle() {
             }
         }
 
-        List(bathroomSize.y.toInt()) { MutableList<String>(bathroomSize.x.toInt()) { "." } }
-            .also { bathroom ->
-                finalRobotPositions.forEach {
-                    val pos = Position(it.y.toInt(), it.x.toInt())
-                    bathroom[pos] = when (val string = bathroom[pos]) {
-                        "." -> "1"
-                        else -> (string.toInt() + 1).toString()
-                    }
-                }
-            }
-            .prettyToString2D()
-            .also { kotlin.io.println(it) }
+        printRobotPositions(finalRobotPositions, bathroomSize)
         println(listOf(quad1, quad2, quad3, quad4))
 
         return quad1 * quad2 * quad3 * quad4
@@ -99,17 +83,37 @@ object Day14 : AoCPuzzle() {
         val robots = input.map(Robot::from)
         val bathroomSize = BATHROOM_SIZE
 
-//        while (true) {
-//            var minEntropy = Float.MAX_VALUE to 0
-//            repeat(10000) { seconds ->
-        val seconds = 6577
-                val finalRobotPositions = robots.map { robot ->
-                    (robot.position + robot.velocity * seconds.toLong()).mod(bathroomSize)
-                }
+        var maxEntropy = 0f to 0
+        repeat(10000) { seconds ->
+//            val seconds = 6577
+            val finalRobotPositions = robots.map { robot ->
+                (robot.position + robot.velocity * seconds.toLong()).mod(bathroomSize)
+            }
 
+//            printRobotPositions(finalRobotPositions, bathroomSize)
+
+            val numberOfRobots = robots.size.toFloat()
+            val expectedProbability = numberOfRobots / (bathroomSize.x * bathroomSize.y)
+
+            val robotMap = finalRobotPositions.groupingBy { it }.eachCount()
+
+            val entropy = -robotMap.values.fold(0f) { acc, robots ->
+                acc + robots / numberOfRobots * log2(robots.toFloat() / numberOfRobots / expectedProbability)
+            }
+
+            if (entropy > maxEntropy.first) {
+                maxEntropy = entropy to seconds
+            }
+        }
+        println(maxEntropy)
+
+        return maxEntropy.second
+    }
+
+    private fun printRobotPositions(robotPositions: List<Vector2<Long>>, bathroomSize: Vector2<Long>) {
         List(bathroomSize.y.toInt()) { MutableList<String>(bathroomSize.x.toInt()) { "." } }
             .also { bathroom ->
-                finalRobotPositions.forEach {
+                robotPositions.forEach {
                     val pos = Position(it.y.toInt(), it.x.toInt())
                     bathroom[pos] = when (val string = bathroom[pos]) {
                         "." -> "1"
@@ -119,21 +123,6 @@ object Day14 : AoCPuzzle() {
             }
             .prettyToString2D()
             .also { kotlin.io.println(it) }
-
-                val robotMap = finalRobotPositions.groupingBy { it }.eachCount()
-
-                val entropy = robotMap.values.fold(0f) { acc, robots ->
-                    acc + robots * log2(robots.toFloat())
-                }
-
-//                if (entropy < minEntropy.first) {
-//                    minEntropy = entropy to seconds
-//                }
-//            }
-//            println(minEntropy.second)
-//        }
-
-        return 0
     }
 
     @JvmStatic
