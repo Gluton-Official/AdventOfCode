@@ -3,8 +3,8 @@ package util
 import util.Direction.*
 import kotlin.math.absoluteValue
 
-enum class Direction {
-    North, East, South, West;
+enum class Direction(val symbol: Char) {
+    North('^'), East('>'), South('v'), West('<');
 
     fun isVertical(): Boolean = when (this) {
         North, South -> true
@@ -59,4 +59,6 @@ data class Position(val row: Int, val column: Int) {
         South -> copy(row = row + scale)
         West -> copy(column = column - scale)
     }
+
+    operator fun plus(direction: Direction): Position = offset(direction)
 }
