@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     val ktorVersion = "3.0.1"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -34,6 +35,8 @@ kotlin {
                 enableLanguageFeature(LanguageFeature.WhenGuards.name)
                 enableLanguageFeature(LanguageFeature.MultiDollarInterpolation.name)
                 enableLanguageFeature(LanguageFeature.BreakContinueInInlineLambdas.name)
+                enableLanguageFeature(LanguageFeature.ContextReceivers.name)
+                enableLanguageFeature(LanguageFeature.OverloadResolutionByLambdaReturnType.name)
             }
         }
     }
