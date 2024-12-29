@@ -5,18 +5,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import kotlin.collections.indexOfFirst
+import kotlin.collections.indexOfLast
 
-fun <T> Iterable<T>.indexOfFirstNull(): Int = indexOfFirst { it == null }
-fun <T> List<T>.indexOfFirstNull(): Int = indexOfFirst { it == null }
+fun <T> MutableList<T>.update(index: Int, action: (T) -> T) {
+    this[index] = action(this[index])
+}
 
-fun <T> Iterable<T>.indexOfLastNull(): Int = indexOfLast { it == null }
-fun <T> List<T>.indexOfLastNull(): Int = indexOfLast { it == null }
+fun <C : Iterable<T>, T> C.indexOfFirstNull(): Int = indexOfFirst { it == null }
+fun <C : Iterable<T>, T> C.indexOfFirstNotNull(): Int = indexOfFirst { it != null }
+fun <C : Iterable<T>, T> C.indexOfLastNull(): Int = indexOfLast { it == null }
+fun <C : Iterable<T>, T> C.indexOfLastNotNull(): Int = indexOfLast { it != null }
 
-fun <T> Iterable<T>.indexOfFirstNotNull(): Int = indexOfFirst { it != null }
-fun <T> List<T>.indexOfFirstNotNull(): Int = indexOfFirst { it != null }
+fun <C : Iterable<T>, T, R : Any> C.firstNotNullOfIndexed(predicate: (Int, T) -> R?): R {
+    var index = 0
+    return firstNotNullOf { predicate(index++, it) }
+}
 
-fun <T> Iterable<T>.indexOfLastNotNull(): Int = indexOfLast { it != null }
-fun <T> List<T>.indexOfLastNotNull(): Int = indexOfLast { it != null }
+fun <C : Iterable<T>, T, R : Any> C.firstNotNullOfOrNullIndexed(predicate: (Int, T) -> R?): R? {
+    var index = 0
+    return firstNotNullOfOrNull { predicate(index++, it) }
+}
+
+fun <C : Iterable<T>, T> C.findIndexed(predicate: (Int, T) -> Boolean): T? {
+    var index = 0
+    return find { predicate(index++, it) }
+}
 
 fun <T> List<T>.cyclicIterator(): Iterator<T> = asCyclicSequence().iterator()
 fun <T> List<T>.asCyclicSequence(): Sequence<T> {
@@ -76,17 +90,24 @@ fun <T : List<R>, R, C> T.consumeIndexedTo(destination: C, action: C.(Int, T, R)
     return destination
 }
 
+fun <R> CharSequence.zipWith(other: R): List<Pair<Char, R>> = map { it to other }
 fun <T, R> Iterable<T>.zipWith(other: R): List<Pair<T, R>> = map { it to other }
+
 fun <T, R, V> Iterable<T>.zipWith(other: R, transform: (Pair<T, R>) -> V): List<V> = map { transform(it to other) }
+
+fun <R, C : MutableCollection<Pair<Char, R>>> CharSequence.zipWithTo(destination: C, other: R): C = mapTo(destination) { it to other }
+fun <T, R, C : MutableCollection<Pair<T, R>>> Iterable<T>.zipWithTo(destination: C, other: R): C = mapTo(destination) { it to other }
+
 fun <T, R, V> Iterable<T>.zipWithIndexed(other: R, transform: (Int, Pair<T, R>) -> V): List<V> =
     mapIndexed { index, it -> transform(index, it to other) }
+
 // TODO: try to do automatic splitting
 fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> =
-    runBlocking { map { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
+    runBlocking { map { async(Dispatchers.IO) { transform(it) } }.awaitAll() }
 fun <T> Iterable<T>.parallel(function: Iterable<T>.((T) -> Unit) -> Unit, transform: (T) -> Unit): Unit =
-    runBlocking { buildList { this@parallel.function { add(async(Dispatchers.Default) { transform(it) }) } }.awaitAll() }
+    runBlocking { buildList { this@parallel.function { add(async(Dispatchers.IO) { transform(it) }) } }.awaitAll() }
 fun <T, R> Iterable<T>.parallel(function: Iterable<T>.((T) -> Deferred<R>) -> List<Deferred<R>>, transform: (T) -> R): List<R> =
-    runBlocking { function { async(Dispatchers.Default) { transform(it) } }.awaitAll() }
+    runBlocking { function { async(Dispatchers.IO) { transform(it) } }.awaitAll() }
 
 fun <T> Iterable<T>.uniquePairs(): List<Pair<T, T>> = with(toMutableList()) {
     this@uniquePairs.flatMap { zipWith(it).also { removeFirst() } }

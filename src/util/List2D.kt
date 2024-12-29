@@ -18,6 +18,9 @@ fun <T> List<MutableList<T>>.trySet(row: Int, column: Int, value: T): Boolean =
 fun <T> List<MutableList<T>>.trySet(position: Position, value: T): Boolean =
     getOrNull(position)?.also { this[position] = value } != null
 
+fun <T> List<MutableList<T>>.update(row: Int, column: Int, action: (T) -> T) { this[row][column] = action(this[row][column]) }
+fun <T> List<MutableList<T>>.update(position: Position, action: (T) -> T) { this[position] = action(this[position]) }
+
 fun <T, R : Iterable<T>> List<R>.row(index: Int): R = this[index]
 fun <T> Iterable<List<T>>.column(index: Int): List<T> = map { row -> row[index] }
 
@@ -61,6 +64,24 @@ fun <T> Iterable2D<T>.forEach2DIndexed(action: Position.(T) -> Unit) {
 
 fun <T> Iterable2D<T>.onEach2D(action: (T) -> Unit) =
     onEach { row -> row.forEach(action) }
+
+fun <T> Iterable2D<T>.find2D(action: (T) -> Boolean): T? = firstNotNullOfOrNull { row -> row.find(action) }
+fun <T> Iterable2D<T>.find2DIndexed(action: Position.(T) -> Boolean): T? =
+    firstNotNullOfOrNullIndexed { rowIndex, row ->
+        row.findIndexed { columnIndex, it -> Position(rowIndex, columnIndex).action(it) }
+    }
+
+fun <T, R : Any> Iterable2D<T>.firstNotNullOf2D(action: (T) -> R?): R = firstNotNullOf { row -> row.firstNotNullOfOrNull(action) }
+fun <T, R : Any> Iterable2D<T>.firstNotNullOf2DIndexed(action: Position.(T) -> R?): R =
+    firstNotNullOfIndexed { rowIndex, row ->
+        row.firstNotNullOfOrNullIndexed { columnIndex, it -> Position(rowIndex, columnIndex).action(it) }
+    }
+
+fun <T, R : Any> Iterable2D<T>.firstNotNullOfOrNull2D(action: (T) -> R?): R? = firstNotNullOfOrNull { row -> row.firstNotNullOfOrNull(action) }
+fun <T, R : Any> Iterable2D<T>.firstNotNullOfOrNull2DIndexed(action: Position.(T) -> R?): R? =
+    firstNotNullOfOrNullIndexed { rowIndex, row ->
+        row.firstNotNullOfOrNullIndexed { columnIndex, it -> Position(rowIndex, columnIndex).action(it) }
+    }
 
 fun <T, R> Iterable2D<T>.fold2D(initial: R, operation: (R, T) -> R): R =
     fold(initial) { accumulator, row ->
