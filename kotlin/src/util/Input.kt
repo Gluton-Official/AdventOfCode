@@ -49,7 +49,7 @@ fun downloadInput(
             cookie("session", dotenv["session"])
         }.body()
     }
-    Path("resources/aoc$year/Day${"%02d".format(day)}.txt").apply {
+    Path("../resources/aoc$year/Day${"%02d".format(day)}.txt").apply {
         createParentDirectories()
         writeText(text)
         val msg = "Downloaded to ${this.pathString}"

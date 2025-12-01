@@ -1,5 +1,6 @@
-.gradle
+kotlin/.gradle
 .idea
-build
+kotlin/build
 resources/**
 .env
+rust/target
