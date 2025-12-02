@@ -1,3 +1,4 @@
+use indoc::indoc;
 use crate::util::aocpuzzle::{AOCPuzzle, Test};
 
 struct Day01;
@@ -7,17 +8,18 @@ impl AOCPuzzle<1, 2025> for Day01 {
         vec![
             Test {
                 expected: 3,
-                input: String::from("L68
-L30
-R48
-L5
-R60
-L55
-L1
-L99
-R14
-L82
-")
+                input: indoc! {"
+                    L68
+                    L30
+                    R48
+                    L5
+                    R60
+                    L55
+                    L1
+                    L99
+                    R14
+                    L82
+                "}.trim().into()
             }
         ]
     }
@@ -43,30 +45,31 @@ L82
         vec![
             Test {
                 expected: 6,
-                input: String::from("L68
-L30
-R48
-L5
-R60
-L55
-L1
-L99
-R14
-L82
-")
+                input: indoc! {"
+                    L68
+                    L30
+                    R48
+                    L5
+                    R60
+                    L55
+                    L1
+                    L99
+                    R14
+                    L82
+                "}.trim().into()
             },
-
             Test {
                 expected: 15,
-                input: String::from("L400
-R400
-L250
-R300
-R50
-R50
-L30
-L30
-")
+                input: indoc! {"
+                    L400
+                    R400
+                    L250
+                    R300
+                    R50
+                    R50
+                    L30
+                    L30
+                "}.trim().into()
             }
         ]
     }
