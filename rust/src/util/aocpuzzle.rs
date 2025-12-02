@@ -1,5 +1,6 @@
 use std::fs;
 use std::path::Path;
+use std::str::Lines;
 use std::time::Instant;
 use colored::Colorize;
 use crate::util::input::download_input;
@@ -22,10 +23,10 @@ impl Test {
 
 pub trait AOCPuzzle<const DAY: usize, const YEAR: usize> {
     fn part1_tests(&self) -> Vec<Test>;
-    fn part1(&self, input: String) -> usize;
+    fn part1(&self, input: Lines<'_>) -> usize;
 
     fn part2_tests(&self) -> Vec<Test>;
-    fn part2(&self, input: String) -> usize;
+    fn part2(&self, input: Lines<'_>) -> usize;
 }
 
 pub struct AOCPuzzleRunner<P: AOCPuzzle<DAY, YEAR>, const DAY: usize, const YEAR: usize> {
@@ -55,7 +56,7 @@ impl<P: AOCPuzzle<DAY, YEAR>, const DAY: usize, const YEAR: usize> AOCPuzzleRunn
         self.test_all(&self.puzzle.part2_tests(), "Part 2 Test", |this, input| this.puzzle.part2(input))
     }
 
-    fn test_all(&self, tests: &Vec<Test>, name: &str, action: fn(&Self, String) -> usize) -> bool {
+    fn test_all(&self, tests: &Vec<Test>, name: &str, action: fn(&Self, Lines<'_>) -> usize) -> bool {
         if tests.len() == 1 {
             self.render_test(name, tests.first().unwrap(), action)
         } else  {
@@ -74,16 +75,16 @@ impl<P: AOCPuzzle<DAY, YEAR>, const DAY: usize, const YEAR: usize> AOCPuzzleRunn
         self.render("Part 2", |this, input| this.puzzle.part2(input))
     }
 
-    fn render(&self, name: &str, action: fn(&Self, String) -> usize) -> usize {
+    fn render(&self, name: &str, action: fn(&Self, Lines<'_>) -> usize) -> usize {
         println!("{}", self.labeled_horizontal_rule('=', name).cyan());
 
-        self.render_timed(|| action(self, self.input.clone()))
+        self.render_timed(|| action(self, self.input.lines()))
     }
 
-    fn render_test(&self, name: &str, test: &Test, action: fn(&Self, String) -> usize) -> bool {
+    fn render_test(&self, name: &str, test: &Test, action: fn(&Self, Lines<'_>) -> usize) -> bool {
         println!("{}", self.labeled_horizontal_rule('-', name).yellow());
 
-        let result = action(self, test.input.clone());
+        let result = action(self, test.input.lines());
         let passed = result == test.expected;
         if passed {
             println!("{}", "Passed".bright_green().bold())

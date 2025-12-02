@@ -1,3 +1,4 @@
+use std::str::Lines;
 use indoc::indoc;
 use crate::util::aocpuzzle::{AOCPuzzle, Test};
 
@@ -23,9 +24,9 @@ impl AOCPuzzle<1, 2025> for Day01 {
             }
         ]
     }
-    fn part1(&self, input: String) -> usize {
+    fn part1(&self, input: Lines<'_>) -> usize {
         let mut zeros = 0;
-        let distance: i32 = input.lines()
+        let distance: i32 = input
             .fold(50, |acc, line| {
                 let dir = line.chars().next().unwrap();
                 let dis = line.get(1..).unwrap().parse::<i32>().unwrap();
@@ -73,9 +74,9 @@ impl AOCPuzzle<1, 2025> for Day01 {
             }
         ]
     }
-    fn part2(&self, input: String) -> usize {
+    fn part2(&self, input: Lines<'_>) -> usize {
         let mut zeros = 0;
-        let distance: i32 = input.lines()
+        let distance: i32 = input
              .fold(50, |acc, line| {
                  let dir = line.chars().next().unwrap();
                  let dis = line.get(1..).unwrap().parse::<i32>().unwrap();
