@@ -4,4 +4,4 @@
 |------|-----------------------|
 | 2023 | [Kotlin](kotlin/src/aoc2023) |
 | 2024 | [Kotlin](kotlin/src/aoc2024) |
-| 2025 | [Rust](rust/
+| 2025 | [Rust](rust/src/aoc2025) |
