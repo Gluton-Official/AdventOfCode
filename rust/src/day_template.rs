@@ -1,3 +1,4 @@
+//noinspection RsDetachedFile
 use std::str::Lines;
 use indoc::indoc;
 use crate::util::aocpuzzle::{AOCPuzzle, Test};
