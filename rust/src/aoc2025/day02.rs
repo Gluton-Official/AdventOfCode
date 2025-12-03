@@ -25,10 +25,10 @@ impl Day02 {
                 let id_length = id_string.len();
                 let factors = (1..id_length).filter(|factor| id_length % factor == 0).collect::<Vec<_>>();
                 for factor in factors {
-                    let char_vec = id_string.chars().collect::<Vec<_>>();
-                    let mut sequences = char_vec.chunks(factor).map(|chars| chars.iter().collect::<String>());
+                    let char_vec = id_string.bytes().collect::<Vec<_>>();
+                    let mut sequences = char_vec.chunks(factor);
                     let first_seq = sequences.next().unwrap();
-                    if sequences.all(|seq| seq.eq(&first_seq)) {
+                    if sequences.all(|seq| seq.eq(first_seq)) {
                         invalid_ids.insert(id);
                     }
                 }
