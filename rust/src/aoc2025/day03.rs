@@ -22,34 +22,27 @@ impl Day03 {
     }
 
     fn maximize_joltage(bank: &Vec<usize>, battery_count: usize) -> usize {
-        let mut bank = bank.iter().enumerate().map(|(index, joltage)| (*joltage, index)).collect::<Vec<_>>();
+        let bank = bank.iter().enumerate().map(|(index, joltage)| (*joltage, index)).collect::<Vec<_>>();
 
         let mut selected_batteries = Vec::<(usize, usize)>::with_capacity(battery_count);
-        for _ in 0..battery_count {
-            let (mut index, &battery) = bank.clone().iter().enumerate()
-                .max_by(|(_, (joltage1, index1)), (_, (joltage2, index2))| {
-                    joltage1.cmp(joltage2).then(index1.cmp(index2))
-                }).unwrap();
-            let mut battery = battery;
-            if let Some(&starting_battery) = selected_batteries.iter().min_by(|(_, index1), (_, index2)| index1.cmp(index2)) {
-                let (starting_battery_joltage, starting_battery_index) = starting_battery;
-                let (battery_joltage, battery_index) = battery;
-                if battery_index < starting_battery_index && battery_joltage < starting_battery_joltage {
-                    if let Some((next_index, &next_battery)) = bank.clone().iter().enumerate().rfind(|&(_, &(joltage, index))| index > starting_battery_index && joltage <= battery_joltage) {
-                        index = next_index;
-                        battery = next_battery;
-                    }
-                }
-            }
-            bank.remove(index);
-            selected_batteries.push(battery);
+        for index in 0..battery_count {
+            let left_bound = if let Some((_, index)) = selected_batteries.last() {
+                index + 1
+            } else {
+                0
+            };
+            let right_bound = bank.len() - battery_count + index;
+            let max = bank[left_bound..=right_bound].iter().rev().max_by_key(|(joltage, _)| joltage).unwrap();
+            // println!("{:?} ({left_bound}..={right_bound}) -> {:?}", bank[left_bound..=right_bound].iter().map(|&(joltage, _)| joltage).collect::<Vec<usize>>(), max);
+            selected_batteries.push(*max);
         }
-        selected_batteries.sort_by(|(_, index1), (_, index2)| index1.cmp(index2));
 
         let selected_batteries = selected_batteries.iter().map(|(joltage, _)| *joltage).collect::<Vec<_>>();
-        println!("{}", selected_batteries.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(""));
+        // println!("{}", selected_batteries.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(""));
 
-        selected_batteries.iter().enumerate().fold(0, |acc, (index, joltage)| acc + joltage * 10_u64.pow((battery_count - index - 1) as u32) as usize)
+        selected_batteries.iter().enumerate().fold(0, |acc, (index, joltage)| {
+            acc + joltage * 10_u64.pow((battery_count - index - 1) as u32) as usize
+        })
     }
 }
 
@@ -64,7 +57,7 @@ impl AOCPuzzle<03, 2025> for Day03 {
                     234234234234278
                     818181911112111
                 "}.trim().into()
-            }
+            },
         ]
     }
     fn part1(&self, input: Lines<'_>) -> usize {
@@ -118,8 +111,8 @@ mod test {
         let success = runner.test_part2();
         assert!(success);
         if success {
-            runner.run_part2();
-            // assert_eq!(, runner.run_part2());
+            // runner.run_part2();
+            assert_eq!(167526011932478, runner.run_part2());
         }
     }
 }
