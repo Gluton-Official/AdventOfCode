@@ -30,7 +30,7 @@ pub trait AOCPuzzle<const DAY: usize, const YEAR: usize> {
 }
 
 pub struct AOCPuzzleRunner<P: AOCPuzzle<DAY, YEAR>, const DAY: usize, const YEAR: usize> {
-    puzzle: P,
+    pub puzzle: P,
     input: String
 }
 
